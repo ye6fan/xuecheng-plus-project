@@ -1,0 +1,1 @@
+update course_base set audit_status = '202002';
