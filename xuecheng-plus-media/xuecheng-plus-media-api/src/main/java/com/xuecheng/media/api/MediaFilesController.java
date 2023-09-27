@@ -43,7 +43,8 @@ public class MediaFilesController {
     }
 
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata) throws IOException {
+    public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
+                                      @RequestParam(value = "objectName", required = false) String objectName) throws IOException {
         Long companyId = 1232141425L;
         File file = File.createTempFile("minio", ".temp");
         filedata.transferTo(file);
@@ -52,7 +53,7 @@ public class MediaFilesController {
         uploadFileParamsDto.setFilename(filedata.getOriginalFilename());
         uploadFileParamsDto.setFileSize(filedata.getSize());
         uploadFileParamsDto.setFileType("001001");
-        return mediaFileService.uploadFile(companyId, uploadFileParamsDto, fileAbsolutePath);
+        return mediaFileService.uploadFile(companyId, uploadFileParamsDto, fileAbsolutePath, objectName);
     }
 
     @GetMapping("/preview/{mediaId}")

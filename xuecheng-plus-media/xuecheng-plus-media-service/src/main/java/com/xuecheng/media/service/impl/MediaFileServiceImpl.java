@@ -76,7 +76,14 @@ public class MediaFileServiceImpl implements MediaFileService {
 
         //构建查询条件对象
         LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(MediaFiles::getFilename, queryMediaParamsDto.getFilename());
+        String filename = queryMediaParamsDto.getFilename();
+        String fileType = queryMediaParamsDto.getFileType();
+        if(org.springframework.util.StringUtils.hasText(filename)){
+            queryWrapper.like(MediaFiles::getFilename, filename);
+        }
+        if(org.springframework.util.StringUtils.hasText(fileType)) {
+            queryWrapper.eq(MediaFiles::getFileType, fileType);
+        }
         //分页对象
         Page<MediaFiles> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
         // 查询数据内容获得结果
@@ -91,13 +98,13 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     @Override
-    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath) {
+    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath,  String objectName) {
         String filename = uploadFileParamsDto.getFilename();
         String extension = filename.substring(filename.lastIndexOf("."));
         String mimeType = getMimeType(extension);
         String defaultFolderPath = getDefaultFolderPath();
         String fileMd5 = getFileMd5(new File(localFilePath));
-        String objectName = defaultFolderPath + fileMd5 + extension;
+        if (objectName == null) objectName = defaultFolderPath + fileMd5 + extension;
         boolean flag = addMediaFilesToMinIO(localFilePath, mimeType, bucketFiles, objectName);
         if (!flag) XueChengPlusException.cast("文件上传失败");
         MediaFiles mediaFiles = mediaFileService.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucketFiles, objectName);
@@ -146,20 +153,16 @@ public class MediaFileServiceImpl implements MediaFileService {
         if (mediaFiles != null) {
             String bucket = mediaFiles.getBucket();
             String filePath = mediaFiles.getFilePath();
-            GetObjectArgs getArgs = GetObjectArgs.builder()
-                    .bucket(bucket)
-                    .object(filePath)
-                    .build();
+
             try {
-                FilterInputStream filterInputStream = minioClient.getObject(getArgs);
-                if (filterInputStream != null) {
-                    return RestResponse.success(true);
-                }
-            } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
-                     InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
-                     XmlParserException e) {
-                e.printStackTrace();
+                minioClient.statObject(
+                        StatObjectArgs.builder().bucket(bucket)
+                                .object(filePath).build()
+                );
+            } catch (Exception e) {
+                return RestResponse.success(false);
             }
+            return RestResponse.success(true);
         }
         return RestResponse.success(false);
     }
@@ -167,21 +170,17 @@ public class MediaFileServiceImpl implements MediaFileService {
     @Override
     public RestResponse<Boolean> checkChunk(String fileMd5, int chunk) {
         String chunkFileFolderPath = getChunkFileFolderPath(fileMd5);
-        GetObjectArgs getArgs = GetObjectArgs.builder()
-                .bucket(bucketVideoFiles)
-                .object(chunkFileFolderPath + chunk)
-                .build();
+
         try {
-            FilterInputStream filterInputStream = minioClient.getObject(getArgs);
-            if (filterInputStream != null) {
-                return RestResponse.success(true);
-            }
-        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
-                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
-                 XmlParserException e) {
-            e.printStackTrace();
+            minioClient.statObject(
+                    StatObjectArgs.builder().bucket(bucketVideoFiles)
+                            .object(chunkFileFolderPath + chunk).build()
+            );
+        } catch (Exception e) {
+            return RestResponse.success(false);
         }
-        return RestResponse.success(false);
+        return RestResponse.success(true);
+
     }
 
     @Override
@@ -204,70 +203,74 @@ public class MediaFileServiceImpl implements MediaFileService {
         };
 
         // 将任务提交给线程池处理
-        try {
-            executor.execute(uploadTask);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return RestResponse.success(true);
-        }
+        executor.execute(uploadTask);
 
         return RestResponse.success(true);
     }
 
     @Override
     public RestResponse<Boolean> mergeChunks(Long companyId, String fileMd5, int chunkTotal, UploadFileParamsDto uploadFileParamsDto) {
-        //等待上传成功
-        while (!executor.getQueue().isEmpty() || executor.getActiveCount() > 0) {
+
+        //等待，合并分块，校验文件，写数据库，删除分块
+        Runnable uploadTask = () -> {
+            //等待上传成功
+            while (!executor.getQueue().isEmpty() || executor.getActiveCount() > 0) {
+                try {
+                    Thread.sleep(1500); // 等待一段时间后再次检查
+                } catch (InterruptedException e) {
+                    // 异常处理
+                    e.printStackTrace();
+                    log.error("中断异常");
+                }
+            }
+            String chunkFileFolderPath = getChunkFileFolderPath(fileMd5);
+            List<ComposeSource> sourceList = Stream.iterate(0, i -> ++i).limit(chunkTotal).map(i -> ComposeSource
+                    .builder()
+                    .bucket(bucketVideoFiles)
+                    .object(chunkFileFolderPath + i)
+                    .build()).collect(Collectors.toList());
+            String filename = uploadFileParamsDto.getFilename();
+            String fileExt = filename.substring(filename.lastIndexOf("."));
+            String objectName = getFileFolderPath(fileMd5, fileExt);
+            ComposeObjectArgs composeObjectArgs = ComposeObjectArgs
+                    .builder()
+                    .bucket(bucketVideoFiles)
+                    .object(objectName)
+                    .sources(sourceList)
+                    .build();
             try {
-                Thread.sleep(1500); // 等待一段时间后再次检查
-            } catch (InterruptedException e) {
-                // 异常处理
+                minioClient.composeObject(composeObjectArgs);
+            } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                     InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                     XmlParserException e) {
+                log.error("合并文件出错，bucket：{}，objectName：{}", bucketVideoFiles, objectName);
                 e.printStackTrace();
             }
-        }
-        //合并
-        String chunkFileFolderPath = getChunkFileFolderPath(fileMd5);
-        List<ComposeSource> sourceList = Stream.iterate(0, i -> ++i).limit(chunkTotal).map(i -> ComposeSource
-                .builder()
-                .bucket(bucketVideoFiles)
-                .object(chunkFileFolderPath + i)
-                .build()).collect(Collectors.toList());
-        String filename = uploadFileParamsDto.getFilename();
-        String fileExt = filename.substring(filename.lastIndexOf("."));
-        String objectName = getFileFolderPath(fileMd5, fileExt);
-        ComposeObjectArgs composeObjectArgs = ComposeObjectArgs
-                .builder()
-                .bucket(bucketVideoFiles)
-                .object(objectName)
-                .sources(sourceList)
-                .build();
-        try {
-            minioClient.composeObject(composeObjectArgs);
-        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
-                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
-                 XmlParserException e) {
-            log.error("合并文件出错，bucket：{}，objectName：{}", bucketVideoFiles, objectName);
-            e.printStackTrace();
-            return RestResponse.validfail(false, "合并文件失败");
-        }
-        //校验
-        File file = downloadFileFromMinio(bucketVideoFiles, objectName);
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            String mergerMd5 = DigestUtils.md5Hex(inputStream);
-            if (!fileMd5.equals(mergerMd5)) return RestResponse.validfail(false, "文件校验失败");
-            log.info("校验文件成功");
-            uploadFileParamsDto.setFileSize(file.length());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return RestResponse.validfail(false, "文件校验失败");
-        }
-        //入库
-        MediaFiles mediaFiles = mediaFileService.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucketVideoFiles, objectName);
-        if (mediaFiles == null) return RestResponse.validfail(false, "文件入库失败");
-        //清理
-        String chunkFolderPath = getChunkFileFolderPath(fileMd5);
-        clearChunkFiles(chunkFolderPath, chunkTotal);
+            //校验
+            File file = downloadFileFromMinio(bucketVideoFiles, objectName);
+            try (FileInputStream inputStream = new FileInputStream(file)) {
+                String mergerMd5 = DigestUtils.md5Hex(inputStream);
+                if (!mergerMd5.equals(fileMd5)) log.error("文件检验失败");
+                log.info("校验文件成功");
+                uploadFileParamsDto.setFileSize(file.length());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //入库
+            MediaFiles mediaFiles = mediaFileService.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucketVideoFiles, objectName);
+            if (mediaFiles == null) log.error("文件入库失败");
+            //清理
+            String chunkFolderPath = getChunkFileFolderPath(fileMd5);
+            clearChunkFiles(chunkFolderPath, chunkTotal);
+        };
+
+        // 将任务提交给线程池处理
+        Thread thread = new Thread(uploadTask);
+        thread.setDaemon(true);
+        thread.start();
+
         return RestResponse.success(true);
+
     }
 
     @Override

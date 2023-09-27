@@ -5,12 +5,11 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * <P>
- * 		Mybatis-Plus 配置
+ * Mybatis-Plus 配置
  * </p>
  */
 @Configuration("messagesdk_mpconfig")
 @MapperScan("com.xuecheng.messagesdk.mapper")
 public class MybatisPlusConfig {
-
 
 }

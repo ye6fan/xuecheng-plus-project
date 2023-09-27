@@ -1,5 +1,6 @@
 package com.xuecheng.media;
 
+import com.xuecheng.base.model.RestResponse;
 import io.minio.*;
 import io.minio.errors.*;
 import org.apache.commons.io.IOUtils;
@@ -65,11 +66,16 @@ public class MinioTest {
     }
 
     @Test
-    public void test_thread() {
-        new ThreadPoolExecutor(2, 2, 60,
-                TimeUnit.SECONDS, new LinkedBlockingQueue<>(4),
-                new ThreadPoolExecutor.DiscardPolicy());
-
+    public void test_stat() {
+        try {
+            minioClient.statObject(
+                    StatObjectArgs.builder().bucket("video")
+                            .object("3/e/3ed9d0e0349c7fce14371dbc4d3bbc92/3ed9d0e0349c7fce14371dbc4d3bbc92.mp4").build()
+            );
+        } catch (Exception e) {
+            System.out.println(false);
+        }
+        System.out.println(true);
     }
 
 }

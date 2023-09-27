@@ -10,6 +10,8 @@ import com.xuecheng.content.model.po.*;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import com.xuecheng.content.service.CoursePublishService;
 import com.xuecheng.content.service.TeachplanService;
+import com.xuecheng.messagesdk.model.po.MqMessage;
+import com.xuecheng.messagesdk.service.MqMessageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     CourseBaseMapper courseBaseMapper;
     @Autowired
     CoursePublishMapper coursePublishMapper;
+    @Autowired
+    MqMessageService mqMessageService;
 
     @Override
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
@@ -84,7 +88,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     @Override
     public void publish(Long companyId, Long courseId) {
         CoursePublishPre coursePublishPre = coursePublishPreMapper.selectById(courseId);
-        if ("202004".equals(coursePublishPre.getStatus())) XueChengPlusException.cast("课程没有审核通过");
+        if (coursePublishPre == null) XueChengPlusException.cast("课程没有提交审核，或者已经发布");
+        if ("202003".equals(coursePublishPre.getStatus())) XueChengPlusException.cast("课程没有审核通过");
         //课程发布表
         CoursePublish coursePublish = new CoursePublish();
         BeanUtils.copyProperties(coursePublishPre, coursePublish);
@@ -95,7 +100,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             coursePublishMapper.updateById(coursePublish);
         }
         //消息表
-        //todo
+        MqMessage course_publish = mqMessageService.addMessage("course_publish",
+                String.valueOf(courseId), null, null);
+        if (course_publish == null) XueChengPlusException.cast("消息为空");
         //删除课程预发布表
         coursePublishPreMapper.deleteById(courseId);
     }

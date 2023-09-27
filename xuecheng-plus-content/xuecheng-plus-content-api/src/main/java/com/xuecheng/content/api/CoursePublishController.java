@@ -16,7 +16,7 @@ public class CoursePublishController {
     CoursePublishService coursePublishService;
 
     @GetMapping("/coursepreview/{courseId}")
-    public ModelAndView preview(@PathVariable("courseId") Long courseId){
+    public ModelAndView preview(@PathVariable("courseId") Long courseId) {
         ModelAndView modelAndView = new ModelAndView();
         CoursePreviewDto previewInfo = coursePublishService.getCoursePreviewInfo(courseId);
         modelAndView.addObject("model", previewInfo);
@@ -26,9 +26,15 @@ public class CoursePublishController {
 
     @ResponseBody
     @PostMapping("/courseaudit/commit/{courseId}")
-    public void commitAudit(@PathVariable("courseId") Long courseId){
+    public void commitAudit(@PathVariable("courseId") Long courseId) {
         Long companyId = 1232141425L;
         coursePublishService.commitAudit(companyId, courseId);
+    }
+
+    @PostMapping("/coursepublish/{courseId}")
+    public void coursePublish(@PathVariable Long courseId) {
+        Long companyId = 1232141425L;
+        coursePublishService.publish(companyId, courseId);
     }
 
 }
