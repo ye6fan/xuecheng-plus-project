@@ -1,4 +1,4 @@
-package com.xuecheng.content.config;
+package com.xuecheng.freemarker.config;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author xuxueli 2017-04-28
  */
-//@Configuration
+@Configuration
 public class XxlJobConfig {
     private final Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
 

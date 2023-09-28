@@ -41,4 +41,7 @@ Content-Disposition: form-data; name="filedata"; filename="wallhaven-q2wker.png"
 Content-Type: application/octet-stream
 
 < d:/Messy/Jpg/wallhaven-q2wker.png
+###
+GET {{search_host}}/search/course/list?pageNo=1&keywords=spring
+Content-Type: application/json
 

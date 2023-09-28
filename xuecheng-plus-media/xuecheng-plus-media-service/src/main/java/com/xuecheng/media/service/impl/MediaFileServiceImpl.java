@@ -78,10 +78,10 @@ public class MediaFileServiceImpl implements MediaFileService {
         LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
         String filename = queryMediaParamsDto.getFilename();
         String fileType = queryMediaParamsDto.getFileType();
-        if(org.springframework.util.StringUtils.hasText(filename)){
+        if (org.springframework.util.StringUtils.hasText(filename)) {
             queryWrapper.like(MediaFiles::getFilename, filename);
         }
-        if(org.springframework.util.StringUtils.hasText(fileType)) {
+        if (org.springframework.util.StringUtils.hasText(fileType)) {
             queryWrapper.eq(MediaFiles::getFileType, fileType);
         }
         //分页对象
@@ -98,7 +98,7 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     @Override
-    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath,  String objectName) {
+    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath, String objectName) {
         String filename = uploadFileParamsDto.getFilename();
         String extension = filename.substring(filename.lastIndexOf("."));
         String mimeType = getMimeType(extension);

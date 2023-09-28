@@ -65,22 +65,33 @@ docker run -d \
 
 docker pull elasticsearch:7.12.1
 mkdir /data/elasticsearch
+chmod -R 777 /data/elasticsearch/
 docker run -p 9200:9200 -p 9300:9300 \
            --name elasticsearch \
            --restart always \
            --network xc \
            -v /etc/localtime:/etc/localtime \
-           -v /data/elasticsearch:/usr/share/elasticsearch/data \
+           -v /data/elasticsearch/data:/usr/share/elasticsearch/data \
+           -v /data/elasticsearch/plugins:/usr/share/elasticsearch/plugins \
            -e "discovery.type=single-node" \
+           -e ES_JAVA_OPTS="-Xms512m -Xmx512m" \
            -d elasticsearch:7.12.1
 
 docker pull kibana:7.12.1
 docker run -p 5601:5601 \
         --name kibana \
         --network xc \
+        -e ELASTICSEARCH_HOSTS=http://elasticsearch:9200 \
         -v /etc/localtime:/etc/localtime \
         --restart always \
         -d kibana:7.12.1
+
+ik
+./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.12.1/elasticsearch-analysis-ik-7.12.1.zip -y
+
+cd conf/
+vi kibana.yml
+i18n.locale: "zh-CN"
 
 docker pull nginx:1.24.0
 mkdir /data/nginx/conf -p

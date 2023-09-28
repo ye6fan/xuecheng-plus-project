@@ -1,6 +1,7 @@
 package com.xuecheng.base.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -9,11 +10,11 @@ import java.util.List;
 /**
  * @author Mr.M
  * @version 1.0
- * @description 分页查询结果模型类
- * @date 2023/2/11 15:40
+ * &#064;description  分页查询结果模型类
  */
 @Data
 @ToString
+@NoArgsConstructor
 public class PageResult<T> implements Serializable {
 
     // 数据列表
