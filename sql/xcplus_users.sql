@@ -3,6 +3,8 @@
 -- Host: 192.168.101.65    Database: xc148_users
 -- ------------------------------------------------------
 -- Server version	8.0.26
+CREATE DATABASE IF NOT EXISTS xcplus_users;
+use xcplus_users;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;

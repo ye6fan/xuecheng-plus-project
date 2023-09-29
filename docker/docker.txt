@@ -32,7 +32,7 @@ docker run -p 6379:6379 \
            -v /etc/localtime:/etc/localtime \
            -v /data/redis:/data \
            -d redis:6.2.7 \
-           redis-server --appendonly yes
+           redis-server --requirepass redis --appendonly yes
 
 mkdir /data/xxl-job/logs -p
 docker pull xuxueli/xxl-job-admin:2.3.1
