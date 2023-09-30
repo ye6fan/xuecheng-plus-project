@@ -5,8 +5,8 @@ POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&gr
 ### /oauth/authorize?client_id=XcWebApp&response_type=code&scope=all&redirect_uri=http://www.yefan.xyz
 
 ### 密码模式
-POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&grant_type=password&username={"username":"t1", "password":"111111", "authType":"password"}
-z
+POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&grant_type=password&username={"username":"admin", "password":"111111", "authType":"password"}
+
 ### 校验jwt令牌
 POST {{auth_host}}/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ7XCJjb21wYW55SWRcIjpcIjEyMzIxNDE0MjVcIixcImNyZWF0ZVRpbWVcIjpcIjIwMjItMDktMjhUMDg6MzI6MDNcIixcImlkXCI6XCI1MlwiLFwibmFtZVwiOlwiTeiAgeW4iFwiLFwicGVybWlzc2lvbnNcIjpbXSxcInNleFwiOlwiMVwiLFwic3RhdHVzXCI6XCJcIixcInVzZXJuYW1lXCI6XCJ0MVwiLFwidXR5cGVcIjpcIjEwMTAwMlwifSIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE2OTU5OTMzMDMsImF1dGhvcml0aWVzIjpbInRlc3QiXSwianRpIjoiMWI5OTU0N2YtMTI1OS00NDFiLWE4NWEtZGU2YWNhZWJlNjhmIiwiY2xpZW50X2lkIjoiWGNXZWJBcHAifQ.TNoS78tiRdOAFLfCpgL3h6baFpCnZOCzgRAUlHMaZoA
 

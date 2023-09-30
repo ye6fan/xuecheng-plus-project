@@ -24,8 +24,6 @@ public class PasswordAuthServiceImpl implements AuthService {
 
     @Override
     public XcUserExt execute(AuthParamsDto authParamsDto) {
-        //验证码
-        //todo
         //账号
         String username = authParamsDto.getUsername();
         String checkcode = authParamsDto.getCheckcode();

@@ -46,11 +46,6 @@ public class CourseBaseInfoController {
 
     @GetMapping("/course/{courseId}")
     public CourseBaseInfoDto getCourseBaseById(@PathVariable Long courseId) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(principal);
-        SecurityUtil.XcUser user = SecurityUtil.getUser();
-        assert user != null;
-        System.out.println(user.getUsername());
         return courseBaseInfoService.getCourseBaseInfo(courseId);
     }
 
@@ -64,4 +59,5 @@ public class CourseBaseInfoController {
     public void deleteCourse(@PathVariable Long courseId) {
         courseBaseInfoService.deleteCourseById(1L, courseId);
     }
+
 }
