@@ -10,9 +10,6 @@
                 <router-link to="/organization/media-list">媒资管理</router-link>
                 <div class="divider"></div>
             </el-tab-pane>
-            <el-tab-pane label="问题">
-                <a href="http://localhost:7777">虽然点击发布会报404，但是后台正常运行，不影响工作，只是前端参数的原因</a>
-            </el-tab-pane>
         </el-tabs>
     </div>
 </template>

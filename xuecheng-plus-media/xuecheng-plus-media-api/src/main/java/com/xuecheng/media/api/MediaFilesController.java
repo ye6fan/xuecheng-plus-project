@@ -62,4 +62,10 @@ public class MediaFilesController {
         return RestResponse.success(url);
     }
 
+    @DeleteMapping("/{id}")
+    public RestResponse<String> deleteMedia(@PathVariable String id) {
+        System.out.println(id);
+        return RestResponse.success("您没有权限删除");
+    }
+
 }

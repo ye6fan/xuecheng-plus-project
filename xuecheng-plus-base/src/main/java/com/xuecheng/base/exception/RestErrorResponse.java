@@ -5,8 +5,7 @@ import java.io.Serializable;
 /**
  * @author Mr.M
  * @version 1.0
- * @description 和前端约定返回的异常信息模型
- * @date 2023/2/12 16:55
+ * &#064;description  和前端约定返回的异常信息模型
  */
 public class RestErrorResponse implements Serializable {
 

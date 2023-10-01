@@ -8,11 +8,10 @@ import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.CourseBaseInfoService;
-import com.xuecheng.content.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +55,7 @@ public class CourseBaseInfoController {
     }
 
     @DeleteMapping("/course/{courseId}")
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_del')")
     public void deleteCourse(@PathVariable Long courseId) {
         courseBaseInfoService.deleteCourseById(1L, courseId);
     }

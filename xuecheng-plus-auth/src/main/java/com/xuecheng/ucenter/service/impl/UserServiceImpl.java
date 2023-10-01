@@ -1,9 +1,11 @@
 package com.xuecheng.ucenter.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.xuecheng.ucenter.mapper.XcMenuMapper;
 import com.xuecheng.ucenter.mapper.XcUserMapper;
 import com.xuecheng.ucenter.model.dto.AuthParamsDto;
 import com.xuecheng.ucenter.model.dto.XcUserExt;
+import com.xuecheng.ucenter.model.po.XcMenu;
 import com.xuecheng.ucenter.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class UserServiceImpl implements UserDetailsService {
@@ -21,6 +26,8 @@ public class UserServiceImpl implements UserDetailsService {
     XcUserMapper xcUserMapper;
     @Autowired
     ApplicationContext applicationContext;
+    @Autowired
+    XcMenuMapper xcMenuMapper;
     //AuthParamsDto
     @Override
     public UserDetails loadUserByUsername(String json) throws UsernameNotFoundException {
@@ -43,7 +50,11 @@ public class UserServiceImpl implements UserDetailsService {
 
     public UserDetails getUserPrincipal(XcUserExt xcUserExt) {
         String password = xcUserExt.getPassword();
+        List<XcMenu> xcMenuList = xcMenuMapper.selectPermissionByUserId(xcUserExt.getId());
         String[] authorities = {"test"};
+        if (xcMenuList.size() > 0) {
+            authorities = xcMenuList.stream().map(XcMenu::getCode).toArray(String[]::new);
+        }
         xcUserExt.setPassword(null);
         String userJson = JSON.toJSONString(xcUserExt);
         return User.withUsername(userJson).password(password).authorities(authorities).build();
