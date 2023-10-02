@@ -4,7 +4,7 @@ spring:
     name: learning-api
   cloud:
     nacos:
-      server-addr: 47.122.78.79:8848
+      server-addr: 47.122.94.185:8848
       discovery:
         namespace: dev
         group: xuecheng-plus-project
@@ -27,5 +27,9 @@ spring:
           - data-id: feign-${spring.profiles.active}.yaml
             group: xuecheng-plus-common
             refresh: true
+          - data-id: rabbitmq-${spring.profiles.active}.yaml
+            group: xuecheng-plus-common
+            refresh: true
+
   profiles:
     active: dev

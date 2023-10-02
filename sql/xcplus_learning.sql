@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
--- Host: 192.168.101.65    Database: xc148_learning
+-- Host: localhost    Database: xc148_learning
 -- ------------------------------------------------------
 -- Server version	8.0.26
 CREATE DATABASE IF NOT EXISTS xcplus_learning;

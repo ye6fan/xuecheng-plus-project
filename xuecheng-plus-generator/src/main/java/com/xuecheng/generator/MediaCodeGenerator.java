@@ -15,7 +15,6 @@ import java.util.Arrays;
  */
 public class MediaCodeGenerator {
 
-	// TODO 修改服务名以及数据表名
 	private static final String SERVICE_NAME = "media";
 
 	private static final String DATA_SOURCE_USER_NAME  = "root";
@@ -28,9 +27,7 @@ public class MediaCodeGenerator {
 			"mq_message_history"
 			// "live_course",
 	};
-
-	// TODO 默认生成entity，需要生成DTO修改此变量
-	// 一般情况下要先生成 DTO类 然后修改此参数再生成 PO 类。
+	
 	private static final Boolean IS_DTO = false;
 
 	public static void main(String[] args) {
@@ -58,7 +55,7 @@ public class MediaCodeGenerator {
 		// 数据库配置
 		DataSourceConfig dsc = new DataSourceConfig();
 		dsc.setDbType(DbType.MYSQL);
-		dsc.setUrl("jdbc:mysql://192.168.101.65:3306/xcplus_media"
+		dsc.setUrl("jdbc:mysql://localhost:3306/xcplus_media"
 				+ "?useUnicode=true&useSSL=false&characterEncoding=utf8");
 		dsc.setDriverName("com.mysql.cj.jdbc.Driver");
 		dsc.setUsername(DATA_SOURCE_USER_NAME);
@@ -88,9 +85,6 @@ public class MediaCodeGenerator {
 		strategy.setRestControllerStyle(true);
 		strategy.setInclude(TABLE_NAMES);
 		strategy.setControllerMappingHyphenStyle(true);
-		//此项是将生成的po类名中去掉pc.getModuleName() + "_"
-//		strategy.setTablePrefix(pc.getModuleName() + "_");
-		// Boolean类型字段是否移除is前缀处理
 		strategy.setEntityBooleanColumnRemoveIsPrefix(true);
 		strategy.setRestControllerStyle(true);
 

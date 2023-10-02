@@ -15,7 +15,6 @@ import java.util.Arrays;
  */
 public class CommonCodeGenerator {
 
-	// TODO 修改服务名以及数据表名
 	private static final String SERVICE_NAME = "comments";
 
 	private static final String DATA_SOURCE_USER_NAME  = "root";
@@ -26,8 +25,6 @@ public class CommonCodeGenerator {
 			"comment_target",
 	};
 
-	// TODO 默认生成entity，需要生成DTO修改此变量
-	// 一般情况下要先生成 DTO类 然后修改此参数再生成 PO 类。
 	private static final Boolean IS_DTO = true;
 
 	public static void main(String[] args) {

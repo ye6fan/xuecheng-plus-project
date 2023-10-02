@@ -15,7 +15,6 @@ import java.util.Arrays;
  */
 public class MessageCodeGenerator {
 
-	// TODO 修改服务名以及数据表名
 	private static final String SERVICE_NAME = "messagesdk";
 
 	//数据库账号
@@ -26,14 +25,6 @@ public class MessageCodeGenerator {
 	private static final String[] TABLE_NAMES = new String[]{
 			"mq_message",
 			"mq_message_history"
-//			 "course_base",
-//			 "course_market",
-//			 "teachplan",
-//			 "teachplan_media",
-//			 "course_teacher",
-//			 "course_pub",
-//			 "course_pub_pre"
-//			"course_category"
 	};
 
 	// TODO 默认生成entity，需要生成DTO修改此变量
@@ -66,9 +57,8 @@ public class MessageCodeGenerator {
 		// 数据库配置
 		DataSourceConfig dsc = new DataSourceConfig();
 		dsc.setDbType(DbType.MYSQL);
-		dsc.setUrl("jdbc:mysql://192.168.101.65:3306/xcplus_content"
+		dsc.setUrl("jdbc:mysql://localhost:3306/xcplus_content"
 				+ "?serverTimezone=UTC&useUnicode=true&useSSL=false&characterEncoding=utf8");
-//		dsc.setDriverName("com.mysql.jdbc.Driver");
 		dsc.setDriverName("com.mysql.cj.jdbc.Driver");
 		dsc.setUsername(DATA_SOURCE_USER_NAME);
 		dsc.setPassword(DATA_SOURCE_PASSWORD);

@@ -15,7 +15,6 @@ import java.util.Arrays;
  */
 public class LearningCodeGenerator {
 
-	// TODO 修改服务名以及数据表名
 	private static final String SERVICE_NAME = "learning";
 
 	//数据库账号
@@ -26,9 +25,7 @@ public class LearningCodeGenerator {
 	private static final String[] TABLE_NAMES = new String[]{
 			"xc_learn_record"
 	};
-
-	// TODO 默认生成entity，需要生成DTO修改此变量
-	// 一般情况下要先生成 DTO类 然后修改此参数再生成 PO 类。
+	
 	private static final Boolean IS_DTO = false;
 
 	public static void main(String[] args) {
@@ -57,9 +54,8 @@ public class LearningCodeGenerator {
 		// 数据库配置
 		DataSourceConfig dsc = new DataSourceConfig();
 		dsc.setDbType(DbType.MYSQL);
-		dsc.setUrl("jdbc:mysql://192.168.101.65:3306/xcplus_" + SERVICE_NAME
+		dsc.setUrl("jdbc:mysql://localhost:3306/xcplus_" + SERVICE_NAME
 				+ "?serverTimezone=UTC&useUnicode=true&useSSL=false&characterEncoding=utf8");
-//		dsc.setDriverName("com.mysql.jdbc.Driver");
 		dsc.setDriverName("com.mysql.cj.jdbc.Driver");
 		dsc.setUsername(DATA_SOURCE_USER_NAME);
 		dsc.setPassword(DATA_SOURCE_PASSWORD);
