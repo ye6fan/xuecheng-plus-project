@@ -1,11 +1,14 @@
 package com.xuecheng.learning.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xuecheng.base.exception.XueChengPlusException;
+import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.model.po.CoursePublish;
 import com.xuecheng.learning.feignclient.ContentServiceClient;
 import com.xuecheng.learning.mapper.XcChooseCourseMapper;
 import com.xuecheng.learning.mapper.XcCourseTablesMapper;
+import com.xuecheng.learning.model.dto.MyCourseTableParams;
 import com.xuecheng.learning.model.dto.XcChooseCourseDto;
 import com.xuecheng.learning.model.dto.XcCourseTablesDto;
 import com.xuecheng.learning.model.po.XcChooseCourse;
@@ -70,6 +73,37 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         }
         xcCourseTablesDto.setLearnStatus("702001");
         return xcCourseTablesDto;
+    }
+
+    @Override
+    public boolean saveChooseCourseSuccess(String chooseCourseId) {
+        XcChooseCourse xcChooseCourse = chooseCourseMapper.selectById(chooseCourseId);
+        if (xcChooseCourse == null) {
+            log.error("购买课程时，根据选课id从数据库找不到选课记录：{}", chooseCourseId);
+            return false;
+        }
+        String status = xcChooseCourse.getStatus();
+        if("701002".equals(status)) {
+            xcChooseCourse.setStatus("701001");
+            int update = chooseCourseMapper.updateById(xcChooseCourse);
+            if(update <= 0) {
+                log.error("添加选课记录失败：{}", chooseCourseId);
+                XueChengPlusException.cast("添加选课记录失败");
+            }
+            //我的课程表添加记录
+            addCourseTables(xcChooseCourse);
+        }
+        return true;
+    }
+
+    @Override
+    public PageResult<XcCourseTables> mycourestabls(MyCourseTableParams params) {
+        Page<XcCourseTables> objectPage = new Page<>(params.getPage(), params.getSize());
+        LambdaQueryWrapper<XcCourseTables> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(XcCourseTables::getUserId, params.getUserId());
+        Page<XcCourseTables> courseTablesPage = courseTablesMapper.selectPage(objectPage, wrapper);
+        return new PageResult<>(courseTablesPage.getRecords(), courseTablesPage.getTotal(),
+                params.getPage(), params.getSize());
     }
 
     //添加免费课程,免费课程加入选课记录表、我的课程表

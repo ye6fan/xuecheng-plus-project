@@ -239,8 +239,6 @@ public class StringUtil {
 	/***
 	 * 判断 String 是否int
 	 * 
-	 * @param input
-	 * @return
 	 */
 	public static boolean isInteger(String input) {
 		Matcher mer = Pattern.compile("^[+-]?[0-9]+$").matcher(input);
@@ -252,7 +250,6 @@ public class StringUtil {
 	 * 
 	 * @param str
 	 *            string类型的数组
-	 * @return
 	 */
 	public static Integer[] stringToIntegerArray(String[] str) {
 		Integer array[] = new Integer[str.length];
@@ -267,7 +264,6 @@ public class StringUtil {
 	 * 
 	 * @param str
 	 *            string类型的数组
-	 * @return
 	 */
 	public static Long[] stringTOLongArray(String[] str) {
 		Long array[] = new Long[str.length];
@@ -308,8 +304,6 @@ public class StringUtil {
 	/**
 	 * 判断字符串是否为空（不能为空字符串）
 	 * 
-	 * @param src
-	 * @return
 	 */
 	public static boolean isNull(String src) {
 
@@ -319,9 +313,6 @@ public class StringUtil {
 	/**
 	 * 检查数组中，是否含有当前元素
 	 *
-	 * @param arr
-	 * @param checkValue
-	 * @return
 	 */
 	public static Boolean checkArrayValue(String[] arr, String checkValue) {
 		Boolean checkFlag = false;
@@ -339,8 +330,6 @@ public class StringUtil {
 	/**
 	 * 检查数组中元素，是否在checkValue中出现
 	 *
-	 * @param arr
-	 * @param checkValue
 	 * @return
 	 */
 	public static Boolean isContains(String[] arr, String checkValue) {

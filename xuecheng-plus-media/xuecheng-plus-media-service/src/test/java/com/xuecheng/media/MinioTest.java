@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MinioTest {
     MinioClient minioClient = MinioClient.builder()
-            .endpoint("http://47.122.94.185:9000")
+            .endpoint("http://47.122.93.131:9000")
             .credentials("AKIAIOSFODNN7EXAMPLE", "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
             .build();
 
