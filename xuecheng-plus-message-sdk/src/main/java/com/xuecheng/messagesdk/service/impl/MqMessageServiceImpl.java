@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author itcast
@@ -33,12 +33,12 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
     MqMessageHistoryMapper mqMessageHistoryMapper;
 
 
-    @Override
-    public List<MqMessage> getMessageList(int shardIndex, int shardTotal, String messageType,int count) {
-        return mqMessageMapper.selectListByShardIndex(shardTotal,shardIndex,messageType,count);
+    @Override   //等到消息列表
+    public List<MqMessage> getMessageList(int shardIndex, int shardTotal, String messageType, int count) {
+        return mqMessageMapper.selectListByShardIndex(shardTotal, shardIndex, messageType, count);
     }
 
-    @Override
+    @Override   //向消息表中插入记录
     public MqMessage addMessage(String messageType, String businessKey1, String businessKey2, String businessKey3) {
         MqMessage mqMessage = new MqMessage();
         mqMessage.setMessageType(messageType);
@@ -46,27 +46,27 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
         mqMessage.setBusinessKey2(businessKey2);
         mqMessage.setBusinessKey3(businessKey3);
         int insert = mqMessageMapper.insert(mqMessage);
-        if(insert>0){
+        if (insert > 0) {
             return mqMessage;
-        }else{
+        } else {
             return null;
         }
 
     }
 
     @Transactional
-    @Override
+    @Override   //完成，并删除记录和吧记录插入历史表
     public int completed(long id) {
         MqMessage mqMessage = new MqMessage();
         //完成任务
         mqMessage.setState("1");
         int update = mqMessageMapper.update(mqMessage, new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId, id));
-        if(update>0){
+        if (update > 0) {
 
             mqMessage = mqMessageMapper.selectById(id);
             //添加到历史表
             MqMessageHistory mqMessageHistory = new MqMessageHistory();
-            BeanUtils.copyProperties(mqMessage,mqMessageHistory);
+            BeanUtils.copyProperties(mqMessage, mqMessageHistory);
             mqMessageHistoryMapper.insert(mqMessageHistory);
             //删除消息表
             mqMessageMapper.deleteById(id);
@@ -76,36 +76,36 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
 
     }
 
-    @Override
+    @Override   //完成第一阶段
     public int completedStageOne(long id) {
         MqMessage mqMessage = new MqMessage();
         //完成阶段1任务
         mqMessage.setStageState1("1");
-        return mqMessageMapper.update(mqMessage,new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId,id));
+        return mqMessageMapper.update(mqMessage, new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId, id));
     }
 
-    @Override
+    @Override   //完成第二阶段
     public int completedStageTwo(long id) {
         MqMessage mqMessage = new MqMessage();
         //完成阶段2任务
         mqMessage.setStageState2("1");
-        return mqMessageMapper.update(mqMessage,new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId,id));
+        return mqMessageMapper.update(mqMessage, new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId, id));
     }
 
-    @Override
+    @Override   //完成第三阶段
     public int completedStageThree(long id) {
         MqMessage mqMessage = new MqMessage();
         //完成阶段3任务
         mqMessage.setStageState3("1");
-        return mqMessageMapper.update(mqMessage,new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId,id));
+        return mqMessageMapper.update(mqMessage, new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId, id));
     }
 
-    @Override
+    @Override   //完成第四阶段
     public int completedStageFour(long id) {
         MqMessage mqMessage = new MqMessage();
         //完成阶段4任务
         mqMessage.setStageState4("1");
-        return mqMessageMapper.update(mqMessage,new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId,id));
+        return mqMessageMapper.update(mqMessage, new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId, id));
     }
 
     @Override

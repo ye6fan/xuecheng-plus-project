@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 public class SecurityUtil {
-
+    //因为获取的是，当前线程的安全上下文
     public static XcUser getUser() {
         //拿jwt中的用户身份
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -6,7 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Mr.M
@@ -34,52 +37,56 @@ public abstract class MessageProcessAbstract {
 
     /**
      * &#064;description  扫描消息表多线程执行任务
-     * @param shardIndex 分片序号
-     * @param shardTotal 分片总数
-     * @param messageType  消息类型
-     * @param count  一次取出任务总数
-     * @param timeout 预估任务执行时间,到此时间如果任务还没有结束则强制结束 单位秒
+     *
+     * @param shardIndex  分片序号
+     * @param shardTotal  分片总数
+     * @param messageType 消息类型
+     * @param count       一次取出任务总数
+     * @param timeout     预估任务执行时间,到此时间如果任务还没有结束则强制结束 单位秒
      * @author Mr.M
-    */
-    public void process(int shardIndex, int shardTotal,  String messageType,int count,long timeout) {
+     */
+    public void process(int shardIndex, int shardTotal, String messageType, int count, long timeout) {
 
         try {
             //扫描消息表获取任务清单
-            List<MqMessage> messageList = mqMessageService.getMessageList(shardIndex, shardTotal,messageType, count);
+            List<MqMessage> messageList = mqMessageService.getMessageList(shardIndex, shardTotal, messageType, count);
             //任务个数
             int size = messageList.size();
-            log.debug("取出待处理消息"+size+"条");
-            if(size<=0){
-                return ;
+            log.debug("取出待处理消息" + size + "条");
+            if (size <= 0) {
+                return;
             }
 
-            //创建线程池
+            //创建线程池     //根据读到的数据   //固定线程池
             ExecutorService threadPool = Executors.newFixedThreadPool(size);
-            //计数器
+            //计数器   //等到阻塞
             CountDownLatch countDownLatch = new CountDownLatch(size);
+            //这个execute是线程池的方法
             messageList.forEach(message -> threadPool.execute(() -> {
-                log.debug("开始任务:{}",message);
+                //消息表中的数据
+                log.debug("开始任务:{}", message);
                 //处理任务
                 try {
+                    //就是在这里调用的execute
                     boolean result = execute(message);
-                    if(result){
-                        log.debug("任务执行成功:{})",message);
+                    if (result) {
+                        log.debug("任务执行成功:{})", message);
                         //更新任务状态,删除消息表记录,添加到历史表
                         int completed = mqMessageService.completed(message.getId());
-                        if (completed>0){
-                            log.debug("任务执行成功:{}",message);
-                        }else{
-                            log.debug("任务执行失败:{}",message);
+                        if (completed > 0) {
+                            log.debug("任务执行成功:{}", message);
+                        } else {
+                            log.debug("任务执行失败:{}", message);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    log.debug("任务出现异常:{},任务:{}",e.getMessage(),message);
-                }finally {
+                    log.debug("任务出现异常:{},任务:{}", e.getMessage(), message);
+                } finally {
                     //计数
                     countDownLatch.countDown();
                 }
-                log.debug("结束任务:{}",message);
+                log.debug("结束任务:{}", message);
 
             }));
 
@@ -87,7 +94,7 @@ public abstract class MessageProcessAbstract {
             boolean await = countDownLatch.await(timeout, TimeUnit.SECONDS);
             System.out.println("结束...." + await);
         } catch (InterruptedException e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
     }

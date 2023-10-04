@@ -17,7 +17,7 @@ public class AuthApplication {
         SpringApplication.run(AuthApplication.class, args);
     }
 
-    //远程调用
+    //远程调用使用的restTemplate||OkHttp3Client工厂
     @Bean
     RestTemplate restTemplate() {
         return new RestTemplate(new OkHttp3ClientHttpRequestFactory());

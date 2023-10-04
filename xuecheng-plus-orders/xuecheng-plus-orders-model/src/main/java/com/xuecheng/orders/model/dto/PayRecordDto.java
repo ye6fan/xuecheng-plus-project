@@ -7,8 +7,7 @@ import lombok.ToString;
 /**
  * @author Mr.M
  * @version 1.0
- * @description 支付记录dto
- * @date 2022/10/4 11:30
+ * &#064;description  支付记录dto
  */
 @Data
 @ToString

@@ -16,6 +16,7 @@ public class MediaOpenController {
 
     @GetMapping("/preview/{mediaId}")
     public RestResponse<String> getPlayUrlByMediaId(@PathVariable String mediaId) {
+
         String url = mediaFileService.getFileById(mediaId);
         return RestResponse.success(url);
     }

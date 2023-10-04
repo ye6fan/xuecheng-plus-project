@@ -21,7 +21,6 @@ public class LoginController {
     @Autowired
     XcUserMapper userMapper;
 
-
     @RequestMapping("/login-success")
     public String loginSuccess() {
         return "登录成功";
@@ -32,18 +31,5 @@ public class LoginController {
     public XcUser getuser(@PathVariable("id") String id) {
         return userMapper.selectById(id);
     }
-
-    @RequestMapping("/r/r1")
-    @PreAuthorize("hasAuthority('p1')")
-    public String r1() {
-        return "访问r1资源";
-    }
-
-    @RequestMapping("/r/r2")
-    @PreAuthorize("hasAuthority('p2')")
-    public String r2() {
-        return "访问r2资源";
-    }
-
 
 }

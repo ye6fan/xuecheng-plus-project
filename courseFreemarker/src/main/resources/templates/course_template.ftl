@@ -221,7 +221,7 @@
         <div class="popup-pay-box">
             <div class="title">${model.courseBase.name} <span class="close-popup-pay-box">×</span></div>
             <div class="content">
-                <img :src="qrcode" width="200" height="200" alt="请点击支付宝支付按钮，并完成扫码支付。"/>
+                <img src="/img/ewm.png" width="200" height="200" alt="请点击支付宝支付按钮，并完成扫码支付。"/>
 
                 <div class="info">
                     <p class="info-tit">${model.courseBase.name}<span>课程有效期:${model.courseBase.validDays}天</span>
@@ -231,9 +231,9 @@
                 </div>
             </div>
             <div class="fact-pic">实际支付: <span>￥${model.courseBase.price!''}元</span></div>
-            <div class="go-pay"><a href="#" @click.prevent="wxPay()">微信支付</a><a href="#" @click.prevent="aliPay()">支付宝支付</a><a
-                        href="#" @click.prevent="querypayresult()">支付完成</a><a href="#"
-                                                                                  @click.prevent="startLearngin()">试学</a>
+            <div class="go-pay">
+                <a href="#" @click.prevent="aliPay()">支付宝支付</a>
+                <a href="#" @click.prevent="querypayresult()">支付完成</a>
             </div>
         </div>
         <!--支付弹窗- end -->

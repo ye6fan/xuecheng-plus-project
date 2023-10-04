@@ -22,14 +22,15 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service("wx_authservice")
 public class WxAuthServiceImpl implements AuthService, WxAuthService {
-//    @Value("${weixin.appid}")
-    String appid = "appid";
-//    @Value("${weixin.secret}")
-    String secret = "secret";
+    @Value("${weixin.appid}")
+    private String appid;
+    @Value("${weixin.secret}")
+    private String secret;
 
     @Autowired
     XcUserMapper xcUserMapper;
@@ -52,35 +53,45 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
 
     @Override
     public XcUser wxAuth(String code) {
+        //原来code是string数组，不是一个
+        //在这里调用请求方法了
         Map<String, String> map = getAccess_token(code);
         String access_token = map.get("access_token");
         String openid = map.get("openid");
+        //在这里通过token去获得用户信息
         Map<String, String> userinfo = getUserinfo(access_token, openid);
         return proxy.addWxUser(userinfo);
     }
 
     private Map<String, String> getAccess_token(String code) {
-        String url_template = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
+        String url_template =
+                "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
         String url = String.format(url_template, appid, secret, code);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, null, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST,
+                null, String.class);
         String body = response.getBody();
         return JSON.parseObject(body, Map.class);
     }
 
     private Map<String, String> getUserinfo(String access_token, String openid) {
+        //拿着access_token与openid请求用户信息
         String wxUrl_template = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s";
         String url = String.format(wxUrl_template, access_token, openid);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, null, String.class);
-        String result = new String(response.getBody().getBytes(StandardCharsets.ISO_8859_1),
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST,
+                null, String.class);
+        String result = new String(Objects.requireNonNull(response.getBody())
+                .getBytes(StandardCharsets.ISO_8859_1),
                 StandardCharsets.UTF_8);
         return JSON.parseObject(result, Map.class);
     }
 
+    //简单的调用插入
     @Transactional
     public XcUser addWxUser(Map<String, String> map) {
         String unionid = map.get("unionid");
         String nickname = map.get("nickname");
-        XcUser xcUser = xcUserMapper.selectOne(new LambdaQueryWrapper<XcUser>().eq(XcUser::getWxUnionid, unionid));
+        XcUser xcUser = xcUserMapper.selectOne(new LambdaQueryWrapper<XcUser>()
+                .eq(XcUser::getWxUnionid, unionid));
         if (xcUser != null) return xcUser;
         xcUser = new XcUser();
         String id = UUID.randomUUID().toString();

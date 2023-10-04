@@ -65,7 +65,7 @@ public class MediaFilesController {
     @DeleteMapping("/{id}")
     public RestResponse<String> deleteMedia(@PathVariable String id) {
         System.out.println(id);
-        return RestResponse.success("您没有权限删除");
+        return RestResponse.validfail("您没有权限操作此功能");
     }
 
 }

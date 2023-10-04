@@ -6,8 +6,7 @@ import lombok.ToString;
 /**
  * @author Mr.M
  * @version 1.0
- * @description 支付结果数据, 用于接收支付结果通知处理逻辑
- * @date 2022/10/4 16:49
+ * &#064;description  支付结果数据, 用于接收支付结果通知处理逻辑
  */
 @Data
 @ToString

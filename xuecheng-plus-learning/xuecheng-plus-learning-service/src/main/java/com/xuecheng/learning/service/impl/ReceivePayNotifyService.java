@@ -19,20 +19,21 @@ public class ReceivePayNotifyService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
     @Autowired
     MqMessageService mqMessageService;
-
     @Autowired
     MyCourseTablesService myCourseTablesService;
 
+    //绑定队列
     @RabbitListener(queues = PayNotifyConfig.PAYNOTIFY_QUEUE)
     public void receive(Message message) {
         byte[] body = message.getBody();
         String jsonString = new String(body);
+        //解析为消息表的记录
         MqMessage mqMessage = JSON.parseObject(jsonString, MqMessage.class);
         String chooseCourseId = mqMessage.getBusinessKey1();
         String orderType = mqMessage.getBusinessKey2();
+        //调用保存课程，根据订单类型，购买课程标识
         if (orderType.equals("60201")) {
             boolean flag = myCourseTablesService.saveChooseCourseSuccess(chooseCourseId);
             if (!flag) XueChengPlusException.cast("保存选课记录失败");

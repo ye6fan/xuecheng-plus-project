@@ -39,5 +39,4 @@ public class ResouceServerConfig extends ResourceServerConfigurerAdapter {
                 .anyRequest().permitAll();
     }
 
-
 }

@@ -39,11 +39,12 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
     private static List<String> whitelist = null;
 
     static {
-        //加载白名单
+        //加载白名单||静态
         try (
                 InputStream resourceAsStream = GatewayAuthFilter.class
                         .getResourceAsStream("/security-whitelist.properties");
         ) {
+            //处理
             Properties properties = new Properties();
             properties.load(resourceAsStream);
             Set<String> strings = properties.stringPropertyNames();
@@ -60,13 +61,12 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
     @Autowired
     private TokenStore tokenStore;
 
-
+    //重写鉴权方法，实现过滤逻辑
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        //获取请求的url
         String requestUrl = exchange.getRequest().getPath().value();
         AntPathMatcher pathMatcher = new AntPathMatcher();
-        String sT = getToken(exchange);
-        if (sT != null) System.out.println(sT);
         //白名单放行
         for (String url : whitelist) {
             if (pathMatcher.match(url, requestUrl)) {
@@ -100,10 +100,12 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
      * 获取token
      */
     private String getToken(ServerWebExchange exchange) {
+        //获取请求头中token
         String tokenStr = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (StringUtils.isBlank(tokenStr)) {
             return null;
         }
+        //Bearer {token}
         String token = tokenStr.split(" ")[1];
         if (StringUtils.isBlank(token)) {
             return null;
@@ -113,6 +115,7 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
 
 
     private Mono<Void> buildReturnMono(String error, ServerWebExchange exchange) {
+        //构造error的响应
         ServerHttpResponse response = exchange.getResponse();
         String jsonString = JSON.toJSONString(new RestErrorResponse(error));
         byte[] bits = jsonString.getBytes(StandardCharsets.UTF_8);

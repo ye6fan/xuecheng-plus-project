@@ -35,7 +35,7 @@ public class CoursePublishController {
     }
 
     @PostMapping("/coursepublish/{courseId}")
-//    @PreAuthorize("hasAuthority('xc_teachmanager_course_publish')")
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_publish')")
     public void coursePublish(@PathVariable Long courseId) {
         Long companyId = 1232141425L;
         coursePublishService.publish(companyId, courseId);

@@ -75,18 +75,22 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         return xcCourseTablesDto;
     }
 
-    @Override
+    @Transactional
+    @Override   //选课成功后就开始保存到数据库了
     public boolean saveChooseCourseSuccess(String chooseCourseId) {
+        //选课记录表
         XcChooseCourse xcChooseCourse = chooseCourseMapper.selectById(chooseCourseId);
         if (xcChooseCourse == null) {
             log.error("购买课程时，根据选课id从数据库找不到选课记录：{}", chooseCourseId);
             return false;
         }
         String status = xcChooseCourse.getStatus();
-        if("701002".equals(status)) {
+        //待支付标识
+        if ("701002".equals(status)) {
+            //支付成功标识
             xcChooseCourse.setStatus("701001");
             int update = chooseCourseMapper.updateById(xcChooseCourse);
-            if(update <= 0) {
+            if (update <= 0) {
                 log.error("添加选课记录失败：{}", chooseCourseId);
                 XueChengPlusException.cast("添加选课记录失败");
             }
@@ -169,16 +173,19 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         return xcChooseCourse;
     }
 
-    //添加到我的课程表
+    @Transactional      //添加到我的课程表
     public XcCourseTables addCourseTables(XcChooseCourse xcChooseCourse) {
         String status = xcChooseCourse.getStatus();
+        //选课成功
         if (!"701001".equals(status)) {
             XueChengPlusException.cast("选课没有成功无法添加课程表");
         }
-        XcCourseTables xcCourseTables = getXcCourseTables(xcChooseCourse.getUserId(), xcChooseCourse.getCourseId());
+        XcCourseTables xcCourseTables = getXcCourseTables(xcChooseCourse.getUserId(),
+                xcChooseCourse.getCourseId());
         if (xcCourseTables != null) {
             return xcCourseTables;
         }
+        //我的课程表，添加
         xcCourseTables = new XcCourseTables();
         BeanUtils.copyProperties(xcChooseCourse, xcCourseTables);
         xcCourseTables.setChooseCourseId(xcChooseCourse.getId());

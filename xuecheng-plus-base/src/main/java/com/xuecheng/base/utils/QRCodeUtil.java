@@ -28,7 +28,7 @@ public class QRCodeUtil {
      * @param height  二维码图片高度
      */
     public String createQRCode(String content, int width, int height) {
-        String resultImage = "";
+        String resultImage;
         //除了尺寸，传入内容不能为空
         if (!StringUtils.isEmpty(content)) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -67,6 +67,6 @@ public class QRCodeUtil {
 
     public static void main(String[] args) throws IOException {
         QRCodeUtil qrCodeUtil = new QRCodeUtil();
-        System.out.println(qrCodeUtil.createQRCode("http://xyz.v5.idcfengye.com/orders/alipaytest", 200, 200));
+        System.out.println(qrCodeUtil.createQRCode("http://ww.yefan.xyz/api/orders/requestpay", 200, 200));
     }
 }

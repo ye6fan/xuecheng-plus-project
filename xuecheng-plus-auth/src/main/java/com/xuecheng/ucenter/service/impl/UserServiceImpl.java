@@ -28,18 +28,21 @@ public class UserServiceImpl implements UserDetailsService {
     ApplicationContext applicationContext;
     @Autowired
     XcMenuMapper xcMenuMapper;
-    //AuthParamsDto
+
+    //实现UserDetailsService接口并重写loadUserByUsername方法
+    //这里面有拦截器拦截到的登陆校验
     @Override
     public UserDetails loadUserByUsername(String json) throws UsernameNotFoundException {
-        //json转object
+        //json转object||AuthParamsDto
         AuthParamsDto authParamsDto;
         try {
             authParamsDto = JSON.parseObject(json, AuthParamsDto.class);
         } catch (Exception e) {
             throw new RuntimeException("请求参数不符合要求");
         }
-        //拿数据
+        //拿数据，登录类型
         String authType = authParamsDto.getAuthType();
+        //拼接相应的bean名字
         String beanName = authType + "_authservice";
         AuthService authService = applicationContext.getBean(beanName, AuthService.class);
         //认证

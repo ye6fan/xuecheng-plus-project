@@ -19,10 +19,10 @@ public class SecurityConfig {
     //安全拦截配置
     @Bean
     public SecurityWebFilterChain webFluxSecurityFilterChain(ServerHttpSecurity http) {
-
         return http.authorizeExchange()
                 .pathMatchers("/**").permitAll()
                 .anyExchange().authenticated()
+                //禁用了CSRF保护功能
                 .and().csrf().disable().build();
     }
 

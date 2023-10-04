@@ -1,11 +1,9 @@
 package com.xuecheng.freemarker.jobhandler;
 
 import com.xuecheng.base.exception.XueChengPlusException;
-import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.content.feignclient.CourseIndex;
 import com.xuecheng.content.feignclient.SearchServiceClient;
 import com.xuecheng.content.mapper.CoursePublishMapper;
-import com.xuecheng.content.model.dto.CoursePreviewDto;
 import com.xuecheng.content.model.po.CoursePublish;
 import com.xuecheng.content.service.CoursePublishService;
 import com.xuecheng.messagesdk.model.po.MqMessage;
@@ -21,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 
 @Slf4j
-@Component
+@Component  //通过继承消息虚拟类，导入SDK就可以写自己代码，也就是说每个库都有自己的消息表
 public class CoursePublishTask extends MessageProcessAbstract {
     @Autowired
     CoursePublishService coursePublishService;
@@ -34,10 +32,11 @@ public class CoursePublishTask extends MessageProcessAbstract {
     public void coursePublishJobHandler() {
         int index = XxlJobHelper.getShardIndex();
         int total = XxlJobHelper.getShardTotal();
+        //这个process过程是传递类型的，如何去读取信息，数量和超时时间
         process(index, total, "course_publish", 4, 60);
     }
 
-    @Override
+    @Override   //实现父类的方法，这个方法会在process里的线程中被调用
     public boolean execute(MqMessage mqMessage) {
         //拿到待处理的消息
         Long courseId = Long.parseLong(mqMessage.getBusinessKey1());

@@ -37,14 +37,14 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
                 .withClient("XcWebApp")// client_id
                 .secret(new BCryptPasswordEncoder().encode("XcWebApp"))//客户端密钥
                 .resourceIds("xuecheng-plus")//资源列表
-                // 该client允许的授权类型authorization_code,password,refresh_token,implicit,client_credentials
-                .authorizedGrantTypes("authorization_code", "password", "client_credentials", "implicit", "refresh_token")
+                //该client允许的授权类型authorization_code,password,refresh_token,implicit,client_credentials
+                .authorizedGrantTypes("authorization_code", "password", "client_credentials",
+                        "implicit", "refresh_token")
                 .scopes("all")// 允许的授权范围
                 .autoApprove(false)//false跳转到授权页面
                 //客户端接收授权码的重定向地址
                 .redirectUris("http://localhost:7777/course/search.html");
     }
-
 
     //令牌端点的访问配置
     @Override
@@ -59,10 +59,9 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security
-                .tokenKeyAccess("permitAll()")                    //oauth/token_key是公开
-                .checkTokenAccess("permitAll()")                  //oauth/check_token公开
-                .allowFormAuthenticationForClients();                //表单认证（申请令牌）
+                .tokenKeyAccess("permitAll()")  //oauth/token_key是公开
+                .checkTokenAccess("permitAll()")    //oauth/check_token公开
+                .allowFormAuthenticationForClients();   //表单认证（申请令牌）
     }
-
 
 }

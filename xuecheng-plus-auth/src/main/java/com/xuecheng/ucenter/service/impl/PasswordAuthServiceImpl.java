@@ -9,6 +9,7 @@ import com.xuecheng.ucenter.model.po.XcUser;
 import com.xuecheng.ucenter.service.AuthService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -26,6 +27,7 @@ public class PasswordAuthServiceImpl implements AuthService {
     public XcUserExt execute(AuthParamsDto authParamsDto) {
         //账号
         String username = authParamsDto.getUsername();
+        //验证码的code和key
         String checkcode = authParamsDto.getCheckcode();
         String checkcodekey = authParamsDto.getCheckcodekey();
         if(!StringUtils.hasText(checkcode) || !StringUtils.hasText(checkcodekey)) {
@@ -34,12 +36,14 @@ public class PasswordAuthServiceImpl implements AuthService {
         Boolean verify = checkCodeClient.verify(checkcodekey, checkcode);
         if (!verify) throw new RuntimeException("验证码错误");
         //查询数据库
-        XcUser xcUser = xcUserMapper.selectOne(new LambdaQueryWrapper<XcUser>().eq(XcUser::getUsername, username));
+        XcUser xcUser = xcUserMapper.selectOne(new LambdaQueryWrapper<XcUser>()
+                .eq(XcUser::getUsername, username));
         //null
         if (xcUser == null) throw new RuntimeException("账号不存在");
         //正确的密码
         String passwordDb = xcUser.getPassword();
         String passwordForm = authParamsDto.getPassword();
+        //BCryptPasswordEncoder这个bean进行校验密码
         boolean matches = passwordEncoder.matches(passwordForm, passwordDb);
         if (!matches) throw new RuntimeException("密码错误");
         //权限

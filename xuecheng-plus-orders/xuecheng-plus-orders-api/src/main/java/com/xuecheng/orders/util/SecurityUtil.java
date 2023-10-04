@@ -21,8 +21,9 @@ public class SecurityUtil {
                 //取出用户身份信息
                 String principal = principalObj.toString();
                 //将json转成对象
-                XcUser user = JSON.parseObject(principal, XcUser.class);
-                return user;
+                //User.withUsername(userJson)，这个json是XcUserExt但是继承了XcUser
+                //可以获取到，就这样
+                return JSON.parseObject(principal, XcUser.class);
             }
         } catch (Exception e) {
             log.error("获取当前登录用户身份出错:{}", e.getMessage());
@@ -74,7 +75,6 @@ public class SecurityUtil {
         private LocalDateTime createTime;
 
         private LocalDateTime updateTime;
-
 
     }
 

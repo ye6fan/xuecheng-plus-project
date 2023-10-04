@@ -10,9 +10,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 
  * </p>
- *
  * @author itcast
  */
 @Data
@@ -51,9 +49,8 @@ public class XcOrdersGoods implements Serializable {
     private Float goodsPrice;
 
     /**
-     * 商品详情json,可为空
+     * 商品详情json,可为空，是商品的描述
      */
     private String goodsDetail;
-
 
 }

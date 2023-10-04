@@ -116,7 +116,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         } else {
             coursePublishMapper.updateById(coursePublish);
         }
-        //消息表
+        //消息表，消息类型，还有三个处理的任务标识
         MqMessage course_publish = mqMessageService.addMessage("course_publish",
                 String.valueOf(courseId), null, null);
         if (course_publish == null) XueChengPlusException.cast("消息为空");

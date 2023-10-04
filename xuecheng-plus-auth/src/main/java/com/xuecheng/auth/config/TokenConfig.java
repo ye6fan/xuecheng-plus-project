@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -40,12 +39,12 @@ public class TokenConfig {
 
 
     //令牌管理服务
-    @Bean(name="authorizationServerTokenServicesCustom")
+    @Bean(name = "authorizationServerTokenServicesCustom")
     public AuthorizationServerTokenServices tokenService() {
-        DefaultTokenServices service=new DefaultTokenServices();
+        DefaultTokenServices service = new DefaultTokenServices();
         service.setSupportRefreshToken(true);//支持刷新令牌
         service.setTokenStore(tokenStore);//令牌存储策略
-
+        //令牌增强器
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         tokenEnhancerChain.setTokenEnhancers(Collections.singletonList(accessTokenConverter));
         service.setTokenEnhancer(tokenEnhancerChain);

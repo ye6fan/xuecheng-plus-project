@@ -1,8 +1,8 @@
 package com.xuecheng.media;
 
-import com.xuecheng.base.model.RestResponse;
 import io.minio.*;
 import io.minio.errors.*;
+import io.minio.messages.Item;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class MinioTest {
     MinioClient minioClient = MinioClient.builder()
@@ -76,6 +73,25 @@ public class MinioTest {
             System.out.println(false);
         }
         System.out.println(true);
+    }
+
+    @Test
+    public void test_list() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        ListObjectsArgs build = ListObjectsArgs.builder().bucket("mediafiles").prefix("course/").build();
+        // 获取目录下的文件列表
+        Iterable<Result<Item>> results = minioClient.listObjects(build);
+
+        // 计数器
+        int fileCount = 0;
+
+        // 遍历文件列表并统计文件个数
+        for (Result<Item> result : results) {
+            Item item = result.get();
+            if (!item.isDir()) {
+                fileCount++;
+            }
+        }
+        System.out.println(fileCount);
     }
 
 }

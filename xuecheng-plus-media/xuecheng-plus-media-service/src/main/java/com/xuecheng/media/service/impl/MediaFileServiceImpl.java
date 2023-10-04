@@ -20,6 +20,7 @@ import io.minio.*;
 import io.minio.errors.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
+import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
@@ -51,8 +52,8 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class MediaFileServiceImpl implements MediaFileService {
-    private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 2,
-            60, TimeUnit.SECONDS,
+    private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(2,
+            2, 60, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(2),
             new ThreadPoolExecutor.CallerRunsPolicy());
 
@@ -213,22 +214,39 @@ public class MediaFileServiceImpl implements MediaFileService {
 
         //等待，合并分块，校验文件，写数据库，删除分块
         Runnable uploadTask = () -> {
-            //等待上传成功
-            while (!executor.getQueue().isEmpty() || executor.getActiveCount() > 0) {
-                try {
-                    Thread.sleep(1500); // 等待一段时间后再次检查
-                } catch (InterruptedException e) {
-                    // 异常处理
-                    e.printStackTrace();
-                    log.error("中断异常");
-                }
-            }
+            //统计
+            int fileCount = 0;
+            //路径
             String chunkFileFolderPath = getChunkFileFolderPath(fileMd5);
-            List<ComposeSource> sourceList = Stream.iterate(0, i -> ++i).limit(chunkTotal).map(i -> ComposeSource
-                    .builder()
-                    .bucket(bucketVideoFiles)
-                    .object(chunkFileFolderPath + i)
-                    .build()).collect(Collectors.toList());
+            //等待上传成功
+            try {
+                while (fileCount != chunkTotal) {
+                    ListObjectsArgs build = ListObjectsArgs.builder()
+                            .bucket(bucketVideoFiles).prefix(chunkFileFolderPath).build();
+                    // 获取目录下的文件列表
+                    Iterable<Result<Item>> results = minioClient.listObjects(build);
+                    // 计数器
+                    // 遍历文件列表并统计文件个数
+                    for (Result<Item> result : results) {
+                        Item item = result.get();
+                        if (item != null && !item.isDir()) {
+                            fileCount++;
+                        }
+                    }
+                    Thread.sleep(2000);
+                }
+            } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                     InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                     XmlParserException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            List<ComposeSource> sourceList = Stream.iterate(0, i -> ++i)
+                    .limit(chunkTotal).map(i -> ComposeSource
+                            .builder()
+                            .bucket(bucketVideoFiles)
+                            .object(chunkFileFolderPath + i)
+                            .build()).collect(Collectors.toList());
             String filename = uploadFileParamsDto.getFilename();
             String fileExt = filename.substring(filename.lastIndexOf("."));
             String objectName = getFileFolderPath(fileMd5, fileExt);
