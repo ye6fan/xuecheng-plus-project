@@ -60,7 +60,8 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
         MqMessage mqMessage = new MqMessage();
         //完成任务
         mqMessage.setState("1");
-        int update = mqMessageMapper.update(mqMessage, new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId, id));
+        int update = mqMessageMapper.update(mqMessage, new LambdaQueryWrapper<MqMessage>()
+                .eq(MqMessage::getId, id));
         if (update > 0) {
 
             mqMessage = mqMessageMapper.selectById(id);

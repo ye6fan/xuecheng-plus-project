@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * &#064;date  2022/10/27 9:04
  * @version 1.0
  */
- @FeignClient(value = "media-api",fallbackFactory = MediaServiceClientFallbackFactory.class)
- @RequestMapping("/media")
- public interface MediaServiceClient {
+@FeignClient(value = "media-api", fallbackFactory = MediaServiceClientFallbackFactory.class)
+@RequestMapping("/media")
+public interface MediaServiceClient {
+    //查询视频地址
+    @GetMapping("/open/preview/{mediaId}")
+    RestResponse<String> getPlayUrlByMediaId(@PathVariable("mediaId") String mediaId);
 
-  @GetMapping("/open/preview/{mediaId}")
-  public RestResponse<String> getPlayUrlByMediaId(@PathVariable("mediaId") String mediaId);
-
- }
+}

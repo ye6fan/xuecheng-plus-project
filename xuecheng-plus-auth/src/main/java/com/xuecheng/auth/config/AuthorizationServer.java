@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
-
+    //都是继承oauth2的Adapter适配器
     @Resource(name = "authorizationServerTokenServicesCustom")
     private AuthorizationServerTokenServices authorizationServerTokenServices;
 

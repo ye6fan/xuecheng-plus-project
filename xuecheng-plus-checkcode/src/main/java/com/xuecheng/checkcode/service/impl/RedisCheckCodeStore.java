@@ -21,11 +21,13 @@ public class RedisCheckCodeStore implements CheckCodeService.CheckCodeStore {
 
     @Override
     public void set(String key, String value, Integer expire) {
+        //设置key val 和过期时间
         redisTemplate.opsForValue().set(key, value, expire, TimeUnit.SECONDS);
     }
 
     @Override
     public String get(String key) {
+        //得到key并转String
         return (String) redisTemplate.opsForValue().get(key);
     }
 

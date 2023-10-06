@@ -16,11 +16,13 @@ public class NumberLetterCheckCodeGenerator implements CheckCodeService.CheckCod
 
     @Override
     public String generate(int length) {
-        String str="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random=new Random();
-        StringBuilder sb =new StringBuilder();
-        for(int i=0;i<length;i++){
-            int number=random.nextInt(36);
+        //这是验证码所可能包含的字母与数字
+        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        //随机4次
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(36);
             sb.append(str.charAt(number));
         }
         return sb.toString();

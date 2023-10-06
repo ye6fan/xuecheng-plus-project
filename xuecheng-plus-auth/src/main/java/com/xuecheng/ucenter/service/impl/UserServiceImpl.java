@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+//继承了UserDetailsService实现loadUserByUsername接口，在这里进行检验
 public class UserServiceImpl implements UserDetailsService {
     @Autowired
     XcUserMapper xcUserMapper;

@@ -20,7 +20,7 @@ import java.io.File;
 
 @Slf4j
 @Component  //通过继承消息虚拟类，导入SDK就可以写自己代码，也就是说每个库都有自己的消息表
-public class CoursePublishTask extends MessageProcessAbstract {
+public class CourseHandlerTask extends MessageProcessAbstract {
     @Autowired
     CoursePublishService coursePublishService;
     @Autowired
@@ -41,7 +41,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
         //拿到待处理的消息
         Long courseId = Long.parseLong(mqMessage.getBusinessKey1());
         Long id = mqMessage.getId();
-        //课程静态化上传minio
+        //课程静态化并上传minio
         generateCourseHtml(id, courseId);
         //向es写索引
         saveCourseIndex(id, courseId);
@@ -50,7 +50,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
         return true;
     }
 
-    private void saveCourseCache(Long id, Long courseId) {
+    public void saveCourseCache(Long id, Long courseId) {
         MqMessageService mqMessageService = this.getMqMessageService();
         int stageThree = mqMessageService.getStageThree(id);
         if (stageThree > 0) {
@@ -59,11 +59,12 @@ public class CoursePublishTask extends MessageProcessAbstract {
         }
         //进行处理
         //todo
+
         //写入消息表
         mqMessageService.completedStageThree(id);
     }
 
-    private void saveCourseIndex(Long id, Long courseId) {
+    public void saveCourseIndex(Long id, Long courseId) {
         MqMessageService mqMessageService = this.getMqMessageService();
         int stageTwo = mqMessageService.getStageTwo(id);
         if (stageTwo > 0) {
@@ -73,14 +74,15 @@ public class CoursePublishTask extends MessageProcessAbstract {
         //进行处理
         CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
         CourseIndex courseIndex = new CourseIndex();
+        //直接copy，也就是课程Id了
         BeanUtils.copyProperties(coursePublish, courseIndex);
         Boolean add = searchServiceClient.add(courseIndex);
-        if(!add) XueChengPlusException.cast("远程调用加入课程索引失败");
+        if (!add) XueChengPlusException.cast("远程调用加入课程索引失败");
         //写入消息表
         mqMessageService.completedStageTwo(id);
     }
 
-    private void generateCourseHtml(Long id, Long courseId) {
+    public void generateCourseHtml(Long id, Long courseId) {
         MqMessageService mqMessageService = this.getMqMessageService();
         int stageOne = mqMessageService.getStageOne(id);
         if (stageOne > 0) {

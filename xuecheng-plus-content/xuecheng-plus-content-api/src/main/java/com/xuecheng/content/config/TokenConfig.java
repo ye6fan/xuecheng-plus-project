@@ -16,6 +16,7 @@ public class TokenConfig {
 
     private final String SIGNING_KEY = "mq123";
 
+    //jwt的token密钥和加密方式
     @Autowired
     private JwtAccessTokenConverter accessTokenConverter;
 
@@ -27,6 +28,7 @@ public class TokenConfig {
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        //在这里把密钥给赋值进去的
         converter.setSigningKey(SIGNING_KEY);
         return converter;
     }

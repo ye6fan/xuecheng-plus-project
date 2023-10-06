@@ -53,8 +53,10 @@ public class PicCheckCodeServiceImpl extends AbstractCheckCodeService implements
         GenerateResult generate = generate(checkCodeParamsDto, 4, "checkcode:", 120);
         String key = generate.getKey();
         String code = generate.getCode();
+        //根据code生成验证码
         String pic = createPic(code);
         CheckCodeResultDto checkCodeResultDto = new CheckCodeResultDto();
+        //返回给前端的结果
         checkCodeResultDto.setAliasing(pic);
         checkCodeResultDto.setKey(key);
         return checkCodeResultDto;

@@ -37,6 +37,8 @@ public class MyCourseTablesController {
         String userId = null;
         if (user != null) {
             userId = user.getId();
+        } else  {
+            XueChengPlusException.cast("请先登录");
         }
         return myCourseTablesService.addChooseCourse(userId, courseId);
     }

@@ -1,5 +1,6 @@
 package com.xuecheng.learning.api;
 
+import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.learning.service.LearningService;
 import com.xuecheng.learning.util.SecurityUtil;
@@ -23,6 +24,7 @@ public class MyLearningController {
     @Autowired
     LearningService learningService;
 
+    //我只能说这项目的后期真的是乱七八糟
     @ApiOperation("获取视频")
     @GetMapping("/open/learn/getvideo/{courseId}/{teachplanId}/{mediaId}")
     public RestResponse<String> getvideo(@PathVariable("courseId") Long courseId,
@@ -32,6 +34,8 @@ public class MyLearningController {
         String userId = null;
         if (user != null) {
             userId = user.getId();
+        } else {
+            XueChengPlusException.cast("请先登录");
         }
         return learningService.getVideo(userId, courseId, teachplanId, mediaId);
     }

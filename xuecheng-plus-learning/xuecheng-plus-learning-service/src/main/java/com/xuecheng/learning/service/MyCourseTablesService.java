@@ -7,6 +7,7 @@ import com.xuecheng.learning.model.dto.XcCourseTablesDto;
 import com.xuecheng.learning.model.po.XcCourseTables;
 
 public interface MyCourseTablesService {
+    //添加选课记录表
     XcChooseCourseDto addChooseCourse(String userId, Long courseId);
 
     XcCourseTablesDto getLearningStatus(String userId, Long courseId);

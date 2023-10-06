@@ -38,7 +38,9 @@ public class TokenConfig {
     }
 
 
-    //令牌管理服务
+    //令牌管理服务，这里是认证并把token（jwt）给前端，别的服务导入spring-cloud-starter -security/-oauth2
+    //进行令牌的配置jwt然后就可以获取与解析token中的数据了
+    //spring-boot-starter-validation是参数校验框架例如不为空，字数要大于多少之类的
     @Bean(name = "authorizationServerTokenServicesCustom")
     public AuthorizationServerTokenServices tokenService() {
         DefaultTokenServices service = new DefaultTokenServices();

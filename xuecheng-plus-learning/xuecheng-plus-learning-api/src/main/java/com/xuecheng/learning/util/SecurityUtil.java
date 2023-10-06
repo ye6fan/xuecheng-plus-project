@@ -35,7 +35,6 @@ public class SecurityUtil {
     }
 
 
-
     @Data
     public static class XcUser implements Serializable {
 
@@ -78,7 +77,6 @@ public class SecurityUtil {
         private LocalDateTime createTime;
 
         private LocalDateTime updateTime;
-
 
     }
 

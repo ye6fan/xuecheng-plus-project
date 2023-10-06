@@ -91,7 +91,7 @@ public class VideoTask {
                 String mp4_path = mp4File.getAbsolutePath();
                 //创建工具类对象
                 Mp4VideoUtil videoUtil = new Mp4VideoUtil(ffmpeg_path, video_path, mp4_name, mp4_path);
-                //开始视频转换，成功将返回success
+                //开始视频转换，成功将返回success，调用工具类只用传，ffmpeg的路径，转码后路径，源文件路径
                 String res = videoUtil.generateMp4();
                 if (!"success".equals(res)) {
                     log.error("coding failed");

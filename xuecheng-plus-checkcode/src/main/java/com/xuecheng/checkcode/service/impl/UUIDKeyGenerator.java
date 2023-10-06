@@ -14,6 +14,7 @@ import java.util.UUID;
 public class UUIDKeyGenerator implements CheckCodeService.KeyGenerator {
     @Override
     public String generate(String prefix) {
+        //uuid是key
         String uuid = UUID.randomUUID().toString();
         return prefix + uuid.replaceAll("-", "");
     }

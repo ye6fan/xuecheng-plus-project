@@ -229,7 +229,7 @@ public class OrderServiceImpl implements OrderService {
             //更新支付记录
             xcPayRecord.setStatus("601002");    //已支付
             xcPayRecord.setOutPayNo(payStatusDto.getTrade_no());
-            xcPayRecord.setOutPayChannel("Alipay");
+            xcPayRecord.setOutPayChannel("Alipay");     //支付类型
             xcPayRecord.setPaySuccessTime(LocalDateTime.now());
             payRecordMapper.updateById(xcPayRecord);
             //更新订单
@@ -237,6 +237,7 @@ public class OrderServiceImpl implements OrderService {
             ordersMapper.updateById(xcOrders);
             //好了，要发送信息到信息表了，每个库有自己的消息表，但是sdk包是一个
             //一个消息类型，三个消息的处理标识，一个businessId，一个订单类型
+            //这个businessId就是选课Id
             MqMessage message = mqMessageService.addMessage("payresult_notify",
                     xcOrders.getOutBusinessId(), xcOrders.getOrderType(), null);
             //通知支付成功，并发送消息到rabbitMq。消息表的消息
@@ -268,7 +269,8 @@ public class OrderServiceImpl implements OrderService {
         }, ex -> log.error("消息发送失败:{}", jsonString));
         //发送消息，就是在这里添加的回调CorrelationData
         //ListenableFuture 是一个可监听的异步任务结果，可以在发送消息后获取一个 Future 对象来监视消息的确认结果
-        rabbitTemplate.convertAndSend(PayNotifyConfig.PAYNOTIFY_EXCHANGE_FANOUT, "",
+        //交换机，路由key，消息，信息确认
+        rabbitTemplate.convertAndSend(PayNotifyConfig.PAY_NOTIFY_EXCHANGE_FANOUT, "",
                 msg, correlationData);
     }
 

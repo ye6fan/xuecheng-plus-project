@@ -57,8 +57,10 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     MqMessageService mqMessageService;
     @Autowired
     MediaServiceClient mediaServiceClient;
+    @Autowired
+    NotifyResult notifyResult;
 
-    @Override
+    @Override   //得到课程预览信息
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
         CoursePreviewDto coursePreviewDto = new CoursePreviewDto();
         CourseBaseInfoDto courseBaseInfo = courseBaseInfoService.getCourseBaseInfo(courseId);
@@ -90,6 +92,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         coursePublishPre.setTeachers(JSON.toJSONString(courseTeacher));
         coursePublishPre.setStatus("202004");
         coursePublishPre.setCreateDate(LocalDateTime.now());
+        //向课程与发布表插入数据
         CoursePublishPre publishPre = coursePublishPreMapper.selectById(courseId);
         if (publishPre == null) {
             coursePublishPreMapper.insert(coursePublishPre);
@@ -110,6 +113,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         //课程发布表
         CoursePublish coursePublish = new CoursePublish();
         BeanUtils.copyProperties(coursePublishPre, coursePublish);
+        //向课程发布表插入数据，更新
         CoursePublish publish = coursePublishMapper.selectById(courseId);
         if (publish == null) {
             coursePublishMapper.insert(coursePublish);
@@ -119,10 +123,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         //消息表，消息类型，还有三个处理的任务标识
         MqMessage course_publish = mqMessageService.addMessage("course_publish",
                 String.valueOf(courseId), null, null);
-        if (course_publish == null) XueChengPlusException.cast("消息为空");
+        //写入rabbitMq
+        notifyResult.notifyCourseResult(course_publish, "publish");
         //删除课程预发布表
         coursePublishPreMapper.deleteById(courseId);
     }
+
 
     @Override
     public File generateCourseHtml(Long courseId) {
@@ -130,7 +136,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         File htmlFile = null;
 
         try {
-            //配置freemarker
+            //配置freemarker，先有一个配置类
             Configuration configuration = new Configuration(Configuration.getVersion());
 
             //加载模板
@@ -153,12 +159,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             //静态化
             //参数1：模板，参数2：数据模型
             String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
-            //将静态化内容输出到文件中
+            //将静态化内容输出到文件中，把string转为输入流
             InputStream inputStream = IOUtils.toInputStream(content);
             //创建静态化文件
             htmlFile = File.createTempFile("course", ".html");
             log.debug("课程静态化，生成静态文件:{}", htmlFile.getAbsolutePath());
-            //输出流
+            //输出流，在文件上创建输出流
             FileOutputStream outputStream = new FileOutputStream(htmlFile);
             IOUtils.copy(inputStream, outputStream);
         } catch (Exception e) {
@@ -168,7 +174,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         return htmlFile;
     }
 
-    @Override
+    @Override   //上传到minio
     public void uploadCourseHtml(Long courseId, File file) {
         MultipartFile multipartFile = MultipartSupportConfig.getMultipartFile(file);
         String course = mediaServiceClient.upload(multipartFile, "course/" + courseId + ".html");

@@ -18,8 +18,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -98,29 +100,32 @@ public class OrderController {
             throws AlipayApiException, IOException {
         //获取支付宝POST过来反馈信息
         Map<String, String> params = new HashMap<>();
+        //返回参数
         Map<String, String[]> requestParams = request.getParameterMap();
         for (String name : requestParams.keySet()) {
             String[] values = requestParams.get(name);
             String valueStr = "";
+            //根据是否是末尾来拼接字符串
             for (int i = 0; i < values.length; i++) {
                 valueStr = (i == values.length - 1) ? valueStr + values[i]
                         : valueStr + values[i] + ",";
             }
             //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
             //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "gbk");
+            //原本是Map<String, String[]>，拼接后Map<String, String>
             params.put(name, valueStr);
         }
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
-
-        //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
         //计算得出通知验证结果
-        //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
+        //boolean AlipaySignature.rsaCheckV1(Map<String, String> params,
+        // String publicKey, String charset, String sign_type)
+        //用公钥进行验证与检查
         boolean verify_result = AlipaySignature.rsaCheckV1(params,
                 ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, "RSA2");
 
         if (verify_result) {
             //验证成功
-            //商户订单号
+            //商户订单号||我们的交易号
             String out_trade_no = new String(request.getParameter("out_trade_no")
                     .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
             //支付宝交易号
@@ -141,12 +146,12 @@ public class OrderController {
                 payStatusDto.setOut_trade_no(out_trade_no);
                 payStatusDto.setTotal_amount(total_amount);
                 payStatusDto.setApp_id(APP_ID);
+                //保存记录并发送信息
                 orderService.saveAliPayStatus(payStatusDto);
             }
 
             //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
             response.getWriter().write("success");
-
         } else {
             //验证失败
             response.getWriter().write("fail");

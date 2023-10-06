@@ -10,8 +10,13 @@ import com.xuecheng.content.model.dto.AddCourseDto;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
 import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
-import com.xuecheng.content.model.po.*;
+import com.xuecheng.content.model.po.CourseBase;
+import com.xuecheng.content.model.po.CourseMarket;
+import com.xuecheng.content.model.po.CourseTeacher;
+import com.xuecheng.content.model.po.Teachplan;
 import com.xuecheng.content.service.CourseBaseInfoService;
+import com.xuecheng.messagesdk.model.po.MqMessage;
+import com.xuecheng.messagesdk.service.MqMessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -33,10 +38,8 @@ import java.util.List;
 public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     @Autowired
     CourseBaseMapper courseBaseMapper;
-
     @Autowired
     CourseMarketMapper courseMarketMapper;
-
     @Autowired
     CourseCategoryMapper courseCategoryMapper;
     @Autowired
@@ -45,6 +48,8 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     TeachplanMapper teachplanMapper;
     @Autowired
     TeachplanMediaMapper teachplanMediaMapper;
+    @Autowired
+    MqMessageService mqMessageService;
 
     @Override
     public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto courseParamsDto) {
@@ -128,6 +133,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
 
     }
 
+    @Transactional
     @Override
     public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto dto) {
         Long courseId = dto.getId();
@@ -144,6 +150,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         return getCourseBaseInfo(courseId);
     }
 
+    @Transactional
     @Override
     public void deleteCourseById(Long companyId, Long courseId) {
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
@@ -157,6 +164,12 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         teachplanMapper.delete(tWrapper);
         courseMarketMapper.deleteById(courseId);
         courseBaseMapper.deleteById(courseId);
+        //消息表，消息类型，还有三个处理的任务标识
+        MqMessage course_delete= mqMessageService.addMessage("course_delete",
+                String.valueOf(courseId), null, null);
+        //写入rabbitMq
+        NotifyResult notifyResult = new NotifyResult();
+        notifyResult.notifyCourseResult(course_delete, "delete");
     }
 
     //单独写一个方法保存营销信息，逻辑：存在则更新，不存在则添加

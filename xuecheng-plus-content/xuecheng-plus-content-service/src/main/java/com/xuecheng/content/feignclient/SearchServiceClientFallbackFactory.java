@@ -7,13 +7,20 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class SearchServiceClientFallbackFactory implements FallbackFactory<SearchServiceClient> {
-
     @Override
     public SearchServiceClient create(Throwable throwable) {
-        log.info("发生熔断：{}", throwable.toString());
-        return courseIndex -> {
-            log.error("发生熔断，索引：{}", courseIndex);
-            return false;
+        return new SearchServiceClient() {
+            @Override
+            public Boolean add(CourseIndex courseIndex) {
+                log.error("添加索引失败：{}", courseIndex.getId());
+                return false;
+            }
+
+            @Override
+            public Boolean delete(Long id) {
+                log.error("删除索引失败：{}", id);
+                return false;
+            }
         };
     }
 }

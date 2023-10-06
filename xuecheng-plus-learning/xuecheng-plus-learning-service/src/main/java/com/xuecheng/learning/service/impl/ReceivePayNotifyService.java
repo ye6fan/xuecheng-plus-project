@@ -25,7 +25,7 @@ public class ReceivePayNotifyService {
     MyCourseTablesService myCourseTablesService;
 
     //绑定队列
-    @RabbitListener(queues = PayNotifyConfig.PAYNOTIFY_QUEUE)
+    @RabbitListener(queues = PayNotifyConfig.PAY_NOTIFY_QUEUE)
     public void receive(Message message) {
         byte[] body = message.getBody();
         String jsonString = new String(body);

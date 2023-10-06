@@ -36,18 +36,19 @@ public abstract class AbstractCheckCodeService implements CheckCodeService {
      * @author Mr.M
      */
     public GenerateResult generate(CheckCodeParamsDto checkCodeParamsDto, Integer code_length, String keyPrefix, Integer expire) {
-        //生成四位验证码
+        //生成四位验证码，根据传来的参数知道
         String code = checkCodeGenerator.generate(code_length);
         log.debug("生成验证码:{}", code);
-        //生成一个key
+        //生成一个key，uuid
         String key = keyGenerator.generate(keyPrefix);
 
-        //存储验证码
+        //存储验证码，key是标识，code是内容，ecpire是过期时间
         checkCodeStore.set(key, code, expire);
         //返回验证码生成结果
         GenerateResult generateResult = new GenerateResult();
         generateResult.setKey(key);
         generateResult.setCode(code);
+        //结果返回
         return generateResult;
     }
 
@@ -70,6 +71,7 @@ public abstract class AbstractCheckCodeService implements CheckCodeService {
             return false;
         }
         boolean result = code_l.equalsIgnoreCase(code);
+        //验证完就删
         if (result) {
             //删除验证码
             checkCodeStore.remove(key);
