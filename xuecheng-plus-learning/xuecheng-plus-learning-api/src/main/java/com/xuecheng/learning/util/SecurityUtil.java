@@ -3,6 +3,8 @@ package com.xuecheng.learning.util;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.Serializable;
@@ -19,7 +21,6 @@ public class SecurityUtil {
     public static XcUser getUser() {
         //拿jwt中的用户身份
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         if (principal instanceof String){
             String jsonString = (String) principal;
             XcUser xcUser = null;
@@ -29,7 +30,6 @@ public class SecurityUtil {
                 log.debug("解析jwt中的用户身份无法转成XcUser对象:{}",jsonString);
             }
             return xcUser;
-
         }
         return null;
     }

@@ -1,6 +1,5 @@
 package com.xuecheng.gateway.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -15,9 +14,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class TokenConfig {
 
     private final String SIGNING_KEY = "mq123";
-
-    @Autowired
-    private JwtAccessTokenConverter accessTokenConverter;
 
     @Bean
     public TokenStore tokenStore() {

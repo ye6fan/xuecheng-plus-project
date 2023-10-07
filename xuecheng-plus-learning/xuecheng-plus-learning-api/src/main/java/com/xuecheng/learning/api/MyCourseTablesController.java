@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 /**
  * @author Mr.M
  * @version 1.0
@@ -45,21 +47,19 @@ public class MyCourseTablesController {
 
     @ApiOperation("查询学习资格")
     @PostMapping("/choosecourse/learnstatus/{courseId}")
-    public XcCourseTablesDto getLearnstatus(@PathVariable("courseId") Long courseId) {
+    public XcCourseTablesDto getLearnStatus(@PathVariable("courseId") Long courseId) {
         SecurityUtil.XcUser user = SecurityUtil.getUser();
-        String userId = null;
-        if (user != null) {
-            userId = user.getId();
-        }
+        if(user == null) return null;
+        String userId = user.getId();
         return myCourseTablesService.getLearningStatus(userId, courseId);
     }
 
     @ApiOperation("我的课程表")
     @GetMapping("/mycoursetable")
-    public PageResult<XcCourseTables> mycoursetable(MyCourseTableParams params) {
+    public PageResult<XcCourseTables> myCourseTable(MyCourseTableParams params) {
         SecurityUtil.XcUser user = SecurityUtil.getUser();
         if (user == null) {
-            XueChengPlusException.cast("请先登录");
+            return new PageResult<>();
         }
         return myCourseTablesService.mycourestabls(params);
     }

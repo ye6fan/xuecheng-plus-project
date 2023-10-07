@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * @author Mr.M
+ * @author 感觉这个就像是为测试才写的配置类，仅仅只是个人猜测
  * @version 1.0
  * &#064;description  安全管理配置
  */

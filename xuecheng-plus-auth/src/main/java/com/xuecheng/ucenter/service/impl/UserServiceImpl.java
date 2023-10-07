@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,12 +56,15 @@ public class UserServiceImpl implements UserDetailsService {
 
     public UserDetails getUserPrincipal(XcUserExt xcUserExt) {
         String password = xcUserExt.getPassword();
+        //menu是权限表，permission是权限和角色对应表
         List<XcMenu> xcMenuList = xcMenuMapper.selectPermissionByUserId(xcUserExt.getId());
         String[] authorities = {"test"};
         if (xcMenuList.size() > 0) {
+            //这里把权限赋值给authorities字符串数组
             authorities = xcMenuList.stream().map(XcMenu::getCode).toArray(String[]::new);
         }
         xcUserExt.setPassword(null);
+        xcUserExt.setPermissions(Arrays.asList(authorities));
         String userJson = JSON.toJSONString(xcUserExt);
         return User.withUsername(userJson).password(password).authorities(authorities).build();
     }
