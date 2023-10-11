@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,17 +18,20 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 public class SecurityUtil {
-    //因为获取的是，当前线程的安全上下文
     public static XcUser getUser() {
         //拿jwt中的用户身份
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof String){
-            String jsonString = (String) principal;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!(authentication instanceof OAuth2Authentication)) {
+            return null;
+        }
+        OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
+        String principal = oAuth2Authentication.getName();
+        if (principal != null){
             XcUser xcUser = null;
             try {
-                xcUser = JSON.parseObject(jsonString, XcUser.class);
+                xcUser = JSON.parseObject(principal, XcUser.class);
             } catch (Exception e) {
-                log.debug("解析jwt中的用户身份无法转成XcUser对象:{}",jsonString);
+                log.debug("解析jwt中的用户身份无法转成XcUser对象:{}", principal);
             }
             return xcUser;
         }

@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 
 /**
  * @author 感觉这个就像是为测试才写的配置类，仅仅只是个人猜测
@@ -19,22 +20,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    //444444444444444
     @Autowired
-    DaoAuthenticationProviderCustom daoAuthenticationProviderCustom;
-
+    private DaoAuthenticationProviderCustom daoAuthenticationProviderCustom;
+    //555555555555555
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProviderCustom);
     }
-
+    //1111111111111
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
+    //99999999999999999
     @Bean
     public PasswordEncoder passwordEncoder() {
-        //密码为明文方式
         return new BCryptPasswordEncoder();
     }
 

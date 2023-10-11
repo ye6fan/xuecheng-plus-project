@@ -3,6 +3,7 @@ package com.xuecheng.auth.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
@@ -18,18 +19,20 @@ import java.util.Collections;
  **/
 @Configuration
 public class TokenConfig {
+    //对称加密
     private final String SIGNING_KEY = "mq123";
-
     @Autowired
-    TokenStore tokenStore;
+    private ClientDetailsService clientDetailsService;
+    @Autowired
+    private TokenStore tokenStore;
     @Autowired
     private JwtAccessTokenConverter accessTokenConverter;
-
+    //66666666666666
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
-
+    //7777777777777777
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -41,9 +44,11 @@ public class TokenConfig {
     //令牌管理服务，这里是认证并把token（jwt）给前端，别的服务导入spring-cloud-starter -security/-oauth2
     //进行令牌的配置jwt然后就可以获取与解析token中的数据了
     //spring-boot-starter-validation是参数校验框架例如不为空，字数要大于多少之类的
+    //88888888888888888
     @Bean(name = "authorizationServerTokenServicesCustom")
     public AuthorizationServerTokenServices tokenService() {
         DefaultTokenServices service = new DefaultTokenServices();
+        service.setClientDetailsService(clientDetailsService);//配置客户端详情
         service.setSupportRefreshToken(true);//支持刷新令牌
         service.setTokenStore(tokenStore);//令牌存储策略
         //令牌增强器
@@ -55,6 +60,5 @@ public class TokenConfig {
         service.setRefreshTokenValiditySeconds(259200); // 刷新令牌默认有效期3天
         return service;
     }
-
 
 }

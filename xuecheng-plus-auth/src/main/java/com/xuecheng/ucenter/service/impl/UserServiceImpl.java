@@ -16,14 +16,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 //继承了UserDetailsService实现loadUserByUsername接口，在这里进行检验
+//22222222222222
 public class UserServiceImpl implements UserDetailsService {
     @Autowired
     XcUserMapper xcUserMapper;
@@ -34,6 +33,7 @@ public class UserServiceImpl implements UserDetailsService {
 
     //实现UserDetailsService接口并重写loadUserByUsername方法
     //这里面有拦截器拦截到的登陆校验
+    //返回的是UserDetails不是User
     @Override
     public UserDetails loadUserByUsername(String json) throws UsernameNotFoundException {
         //json转object||AuthParamsDto

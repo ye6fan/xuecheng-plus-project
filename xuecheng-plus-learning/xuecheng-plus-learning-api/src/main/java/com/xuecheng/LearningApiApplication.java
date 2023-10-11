@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
+import java.util.TimeZone;
+
 @EnableFeignClients(basePackages = {"com.xuecheng.learning.feignclient"})
 @EnableDiscoveryClient
 @SpringBootApplication
@@ -13,6 +15,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class LearningApiApplication {
 
     public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         SpringApplication.run(LearningApiApplication.class, args);
     }
 

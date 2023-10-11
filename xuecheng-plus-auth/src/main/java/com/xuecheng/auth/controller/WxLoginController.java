@@ -25,6 +25,6 @@ public class WxLoginController {
         XcUser xcUser = wxAuthService.wxAuth(code);
         String username = xcUser.getUsername();
         //获取成功后重定向到认证
-        return "redirect:http://localhost:7777/sign.html?username="+username+"&authType=wx";
+        return "redirect:https://www.yefan.xyz/sign.html?username="+username+"&authType=wx";
     }
 }

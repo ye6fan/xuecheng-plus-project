@@ -1,0 +1,1 @@
+insert into xc_permission (id, role_id, menu_id, create_time) VALUES (21,6,903459378655395848,NOW());

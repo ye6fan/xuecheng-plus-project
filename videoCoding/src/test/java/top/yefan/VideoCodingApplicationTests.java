@@ -1,5 +1,6 @@
 package top.yefan;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import top.yefan.mapper.MediaProcessMapper;
 import top.yefan.pojo.MediaFiles;
 import top.yefan.pojo.MediaProcess;
 import top.yefan.pojo.MediaProcessHistory;
+import top.yefan.service.MediaProcessService;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,6 +26,8 @@ class VideoCodingApplicationTests {
     MediaProcessHistoryMapper mediaProcessHistoryMapper;
     @Autowired
     MediaFilesMapper mediaFilesMapper;
+    @Autowired
+    MediaProcessService mediaProcessService;
 
     @Test
     void contextLoads() {
@@ -68,5 +72,6 @@ class VideoCodingApplicationTests {
             t.printStackTrace();
         }
     }
+
 
 }

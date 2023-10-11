@@ -20,7 +20,7 @@ public class TokenConfig {
         return new JwtTokenStore(accessTokenConverter());
     }
 
-    @Bean
+    @Bean   //使用密钥生成令牌
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setSigningKey(SIGNING_KEY);

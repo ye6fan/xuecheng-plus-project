@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d208478"],{a3b2:function(n,e,t){"use strict";t.r(e);var o=function(){var n=this,e=n.$createElement,t=n._self._c||e;return t("div")},a=[],c={name:"app",components:{},created:function(){this.$router.push("/organization/course-list")}},r=c,s=t("2877"),u=Object(s["a"])(r,o,a,!1,null,"f9b17512",null);e["default"]=u.exports}}]);
+//# sourceMappingURL=chunk-2d208478.e99b6bd9.js.map

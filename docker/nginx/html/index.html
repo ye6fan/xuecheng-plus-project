@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/img/asset-favicon.ico">
+    <title>叶凡课堂</title>
+
+    <link rel="stylesheet" href="/plugins/normalize-css/normalize.css"/>
+    <link rel="stylesheet" href="/plugins/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/css/page-learing-index.css"/>
+    <link rel="stylesheet" href="/css/page-header.css"/>
+    <style>
+
+
+        ul, ol, li, dl, dd {
+            margin: 0;
+            padding: 0
+        }
+
+
+        .mod-nav__side-list {
+            width: 400px
+        }
+
+        .mod-nav__side-li {
+            padding: 0px 0 12px
+        }
+
+        .mod-nav__link-nav-second {
+            display: inline-block;
+            vertical-align: middle;
+            font-weight: 700;
+            vertical-align: top;
+            width: 110px;
+            text-align: left
+        }
+
+        .mod-nav__link-nav-second .mod-nav__link-nav-second-link {
+            color: #333
+        }
+
+        .mod-nav__link-nav-second .mod-nav__link-nav-second-link:hover {
+            text-decoration: underline
+        }
+
+        .mod-nav__wrap-nav-third {
+            display: inline-block;
+            vertical-align: middle;
+            /*width: 355px;*/
+            vertical-align: top;
+            *vertical-align: top;
+            _vertical-align: top
+        }
+
+        .mod-nav__link-nav-third {
+            display: inline-block;
+            vertical-align: middle;
+            color: #333;
+            margin-right: 20px;
+            text-align: left;
+            vertical-align: top;
+            margin-bottom: 3px
+        }
+
+        .mod-nav__link-nav-third:hover {
+            text-decoration: underline
+        }
+
+        .my-class-box > .m-slideTop-personFunc {
+            color: black;
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            font-size: 16px;
+
+        }
+
+        .m-slideTop-personFunc > .m-slideTop-personFunc-f > .u-person-container {
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 330px;
+            border-radius: 0px;
+            position: relative;
+            clear: none;
+            display: block;
+            color: black;
+            margin: 0px;
+            padding: 0px;
+            font-size: 16px;
+        }
+
+        .m-slideTop-personFunc > .m-slideTop-personFunc-f > .u-person-container > .u-person-word > span {
+            line-height: 16px;
+            display: inline-block;
+            width: 100%;
+            font-family: 微软雅黑, "Microsoft YaHei";
+            font-size: 12px;
+            color: #666666;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .m-slideTop-personFunc > .m-slideTop-personFunc-f > .u-person-container > .u-person-title > span {
+            padding-top: 10px;
+            line-height: 22px;
+            display: inline-block;
+            width: 100%;
+            font-family: 微软雅黑, "Microsoft YaHei";
+            font-size: 16px;
+            color: #333333;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .m-slideTop-personFunc > .m-slideTop-personFunc-f > .u-person-container > .navLoginBtn.u-person-login > .m-index-person-loginBtn {
+            line-height: 36px;
+            display: inline-block;
+            width: 100%;
+            font-family: 微软雅黑, "Microsoft YaHei";
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .m-slideTop-personFunc > .m-slideTop-personFunc-f > .u-person-container > .navLoginBtn.u-person-login {
+            left: 20px;
+            top: 250px;
+            width: 160px;
+            height: 36px;
+            border-radius: 0px;
+            position: absolute;
+            clear: none;
+            font-size: 16px;
+            display: block;
+            color: black;
+            #background-color: #00a4ff;
+            border: solid 1px #00a4ff;
+            margin: 0px;
+            padding: 0px;
+            line-height: 36px;
+        }
+
+        .m-slideTop-personFunc > .m-slideTop-personFunc-f > .u-person-container > .navLoginBtn.u-person-login a {
+            display: block;
+            line-height: 35px;
+        }
+
+        .m-slideTop-personFunc > .m-slideTop-personFunc-f > .u-person-container > .u-person-word {
+            left: 28px;
+            top: 280px;
+            width: 144px;
+            height: 16px;
+            border-radius: 0px;
+            position: absolute;
+            clear: none;
+            font-size: 16px;
+            display: block;
+            color: black;
+            margin: 0px;
+            padding: 0px;
+            line-height: 16px;
+        }
+    </style>
+</head>
+
+<body data-spy="scroll" data-target="#myNavbar" data-offset="150">
+<div id="app">
+    <!--头部导航-->
+    <header>
+        <div class="learingHeader">
+            <nav class="navbar">
+                <div class="">
+                    <div class="logo"><img src="http://www.yefan.xyz/static/img/asset-logoIco.png" width="100%" alt="">
+                    </div>
+                    <div class="nav-list">
+                        <ul class="nav navbar-nav">
+                            <li><a href="http://www.yefan.xyz">首页</a></li>
+                            <li><a href="http://www.yefan.xyz/course/search.html">课程</a></li>
+                            <li></li>
+                        </ul>
+                    </div>
+
+                    <div class="sign-in">
+                        <!-- 未登录 -->
+                        <!-- <a href="#">登录 </a> <span> | </span> <a href="#"> 注册</a>-->
+                        <!-- 登录 -->
+                        <!--<a href="#" class="personal"><span class="personalIco"></span>消息</a>-->
+                        <a href="javascript:;" @click="logout" v-if="logined == true">退出</a>
+                        <a href="javascript:;" @click="showlogin" v-if="logined == false">登录&nbsp;|&nbsp;注册</a>
+                        <a href="http://www.yefan.xyz/" class="personal" target="_blank"
+                           style="text-decoration: underline; color: blue;">我的学习</a>
+                        <a href="http://localhost:9999/" class="personal" target="_blank"
+                           style="text-decoration: underline; color: blue;">教学机构</a>
+
+                        <!--<a href="#" class="myInfo"><img src="img/asset-myImg.jpg" alt="">个人中心</a>-->
+                    </div>
+                    <!--<div class="starch">
+                        <div><input type="text" class="input-search" placeholder="输入查询关键词"></div>
+                        <div class="searchword"><a href="">搜索</a> </div>
+                    </div>-->
+                    <div class="starch">
+                        <div><input type="text" id="keywords-text" class="input-search" v-model="keywords"
+                                    @keyup.enter="search" placeholder="输入查询关键词"></div>
+                        <div class="searchword"><a @click="search">搜索</a></div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+    </header>
+</div>
+<!--底部版权-->
+<!--#include virtual="/include/footer.html"-->
+<!--底部版权-->
+<!-- 页面 css js -->
+
+<script type="text/javascript" src="plugins/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="plugins/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="js/widget-travel-index-nav.js"></script>
+<script>
+
+    $('.gotop a').hover(function () {
+        $(this).find('span').removeClass('hide')
+    }, function () {
+        $(this).find('span').addClass('hide')
+    })
+
+    $(function () {
+        $('.interest-box .interest-cont li').click(function () {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            } else {
+                $(this).addClass('active');
+            }
+        })
+        $('.mask').click(function () {
+            $('.interest-box').hide();
+        })
+        $('.button .pres').click(function () {
+            $('.interest-box').hide();
+        })
+        $('.button .skip').click(function () {
+            $('.interest-box').hide();
+        })
+    })
+</script>
+<script src="js/page-learing-index.js"></script>
+</body>

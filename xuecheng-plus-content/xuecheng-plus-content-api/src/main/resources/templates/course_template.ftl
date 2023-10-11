@@ -58,10 +58,10 @@
             </div>
             <div class="banner-rit">
                 <p>
-                    <a href="http://localhost:7777/course/preview/learning.html?id=${model.courseBase.id}"
+                    <a href="https://www.yefan.xyz/course/preview/learning.html?id=${model.courseBase.id}"
                        target="_blank">
                         <#if model.courseBase.pic??>
-                            <img src="http://localhost:7777${model.courseBase.pic}" alt="" width="160" height="160">
+                            <img src="https://www.yefan.xyz${model.courseBase.pic}" alt="" width="160" height="160">
                         <#else>
                             <img src="/static/img/widget-video.png" alt="" width="160" height="160">
                         </#if>
@@ -97,7 +97,7 @@
                                 <div class="title"><span>课程制作</span></div>
                                 <div class="cont">
                                     <div class="img-box"><img
-                                                src="http://localhost:7777${model.courseTeacher.photograph}" alt=""
+                                                src="https://www.yefan.xyz${model.courseTeacher.photograph}" alt=""
                                                 width="120" height="120"></div>
                                     <div class="info-box">
                                         <p class="name">教学方：<em>${model.courseTeacher.teacherName!''}</em></p>
@@ -170,7 +170,7 @@
                                         <ul class="list-box">
                                             <#list firstNode.teachPlanTreeNodes as secondNode>
                                                 <li>
-                                                    <a href="http://localhost:7777/course/preview/learning.html?id=${model.courseBase.id}&chapter=${secondNode.teachplanMedia.teachplanId!''}"
+                                                    <a href="https://www.yefan.xyz/course/preview/learning.html?id=${model.courseBase.id}&chapter=${secondNode.teachplanMedia.teachplanId!''}"
                                                        target="_blank">${secondNode.pname}</a></li>
                                             </#list>
                                         </ul>

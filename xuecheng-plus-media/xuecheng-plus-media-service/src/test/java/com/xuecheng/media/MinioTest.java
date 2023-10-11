@@ -17,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MinioTest {
     MinioClient minioClient = MinioClient.builder()
-            .endpoint("http://47.122.93.131:9000")
+            .endpoint("http://nacos:9000")
             .credentials("AKIAIOSFODNN7EXAMPLE", "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
             .build();
 

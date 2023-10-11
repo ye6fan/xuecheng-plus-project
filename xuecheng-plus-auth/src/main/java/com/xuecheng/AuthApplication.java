@@ -8,12 +8,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.TimeZone;
+
 @EnableFeignClients(basePackages = "com.xuecheng.ucenter.feignclient")
 @EnableDiscoveryClient
 @SpringBootApplication
 public class AuthApplication {
 
     public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         SpringApplication.run(AuthApplication.class, args);
     }
 

@@ -21,7 +21,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain webFluxSecurityFilterChain(ServerHttpSecurity http) {
         return http.authorizeExchange()
                 .pathMatchers("/**").permitAll()
-                .anyExchange().authenticated()
+                .anyExchange().authenticated()//必须放在最后面，不然冲突
                 //禁用了CSRF保护功能
                 .and().csrf().disable().build();
     }

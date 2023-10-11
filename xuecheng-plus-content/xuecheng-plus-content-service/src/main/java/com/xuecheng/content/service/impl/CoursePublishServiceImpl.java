@@ -142,8 +142,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             //加载模板
             //选指定模板路径,classpath下templates下
             //得到classpath路径
-            String classpath = Objects.requireNonNull(this.getClass().getResource("/")).getPath();
-            configuration.setDirectoryForTemplateLoading(new File(classpath + "/templates/"));
+            /*String classpath = Objects.requireNonNull(this.getClass().getResource("/")).getPath();
+            configuration.setDirectoryForTemplateLoading(new File(classpath + "/templates/"));*/
+            configuration.setClassForTemplateLoading(this.getClass(), "/templates/");
             //设置字符编码
             configuration.setDefaultEncoding("utf-8");
 

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link rel="stylesheet" href="http://www.yefan.xyz/static/plugins/normalize-css/normalize.css"/>
+    <link rel="stylesheet" href="http://www.yefan.xyz/static/plugins/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="http://www.yefan.xyz/static/css/page-learing-personal.css"/>
+</head>
+
+<body>
+<!-- 页面头部 -->
+<!--#include virtual="/include/header.html"-->
+<div class="personal-header" style="background-image: url(http://www.yefan.xyz/static/img/asset-banner.png);">
+    <!--<div class="personal-info">-->
+    <!--<p><h1>吴雪</h1></p>-->
+    <!--<p>Web前端工程师 学习时长 48小时35分</p>-->
+    <!--</div>-->
+    <!--<div class="container">-->
+    <!--<div class="col-lg-2"><img src="http://www.yefan.xyz/static/img/logoIco.png" alt=""></div>-->
+    <!--<div class="col-lg-4 title text-left">学习中心</div>-->
+    <!--<div class="col-lg-6 text-right"><input type="text" class="input-search" placeholder="输入查询关键词"><input type="submit" class="search-buttom"></div>-->
+    <!--</div>-->
+</div>
+<!-- 页面 -->
+<div class="container">
+    <div class="personal-content pull-right" id="learningcenterApp">
+        <div class="personal-cont">
+            <div class="my-course">
+                <div class="cont">
+                    <div class="col-lg-6" v-for="course in mycourseTables">
+                        <div class="item">
+                            <div class="title"><span class="lab">继续学习</span> {{course.courseName}}
+                            </div>
+                            <div class="about"><span class="lab">正在学习</span> {{course.teachplanName}}</div>
+                            <div class="time">有效日期: {{course.validtimeStart}} - {{course.validtimeEnd}}</div>
+                            <div class="rate">
+                                <li class="active"></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <span>1/4 已完成部分 <em>进度 25%</em></span></div>
+                            <div class="parting"></div>
+                            <div class="butItem text-center" v-if="course.teachplanId"><a
+                                    :href="'http://www.yefan.xyz/course/preview/learning.html?id='+course.courseId+'&chapter='+course.teachplanId"
+                                    class="golearing" target="_blank">继续学习</a>
+                            </div>
+                            <div class="butItem text-center" v-else><a
+                                    :href="'http://www.yefan.xyz/course/preview/learning.html?id='+course.courseId"
+                                    class="golearing" target="_blank">继续学习</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部版权-->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div>
+                    <!--<h1 style="display: inline-block">学成网</h1>--><img
+                        src="http://www.yefan.xyz/static/img/asset-logoIco.png" alt=""></div>
+                <div>叶凡课堂提供在线课程。</div>
+                <div>© 2023</div>
+            </div>
+            <div class="col-md-5 row">
+                <dl class="col-md-4">
+                    <dt>合作伙伴</dt>
+                    <dd>自己</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- 页面 css js -->
+<script type="text/javascript" src="http://www.yefan.xyz/static/plugins/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="http://www.yefan.xyz/static/plugins/bootstrap/dist/js/bootstrap.js"></script>
+<script>
+    $(function () {
+        $('.aft').hover(function () {
+            if (!$(this).hasClass('ac')) {
+                $(this).find('ul').html($('#listcont').html())
+                $(this).addClass('ac')
+            } else {
+                $(this).find('ul').text('')
+                $(this).removeClass('ac')
+            }
+        })
+    })
+
+
+    $(function () {
+        $(window).scroll(function () {
+            console.log($(this)[0].scrollY)
+            if ($(this)[0].scrollY > 235) {
+                $('.personal-nav').css({
+                    'position': 'fixed',
+                    'top': 10
+                });
+            } else if ($(this)[0].scrollY <= 155) {
+                $('.personal-nav').css({
+                    'position': 'relative',
+                    'top': -70
+                });
+            }
+            ;
+        })
+    })
+
+    /*我的课程表*/
+    const myCourseTablesFun = (params) => {
+        return requestGet('/api/learning/mycoursetable', params);
+    }
+    var learningcenterVm = new Vue({
+        el: "#learningcenterApp",
+        data: {
+            params: {
+                userId: '48',
+                courseType: '',
+                sortType: '',
+                expiresType: ''
+            },
+            mycourseTables: []
+        },
+        methods: {
+            sort(type) {
+                this.params.sortType = type
+                this.myCourseTables()
+            },
+            showCourseType(type) {
+                this.params.courseType = type
+                this.myCourseTables()
+            }
+            ,
+            showExpiresType(type) {
+                this.params.expiresType = type
+                this.myCourseTables()
+            },
+            showall() {
+                this.params.courseType = ''
+                this.params.expiresType = ''
+                this.myCourseTables()
+            },
+            myCourseTables() {
+                myCourseTablesFun(this.params).then(res => {
+                    this.mycourseTables = res.items
+                })
+            }
+        },
+        created() {
+            this.myCourseTables()
+        },
+        mounted() {
+
+        }
+    })
+</script>
+
+
+</body>

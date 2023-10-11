@@ -83,13 +83,13 @@ public class Mp4VideoUtil extends VideoUtil {
 
     public static void main(String[] args) throws IOException {
         //ffmpeg的路径
-        String ffmpeg_path = "D:\\soft\\ffmpeg\\ffmpeg.exe";//ffmpeg的安装位置
+        String ffmpeg_path = "D:\\Parts\\ffmpeg\\ffmpeg.exe";//ffmpeg的安装位置
         //源avi视频的路径
-        String video_path = "D:\\develop\\bigfile_test\\nacos01.avi";
+        String video_path = "D:\\Messy\\Video\\avi\\d40978e576ab73cc6c0b141afd4782bf.avi";
         //转换后mp4文件的名称
-        String mp4_name = "nacos01.mp4";
+        String mp4_name = "ndawdawdaw";
         //转换后mp4文件的路径
-        String mp4_path = "D:\\develop\\bigfile_test\\";
+        String mp4_path = "D:\\Messy\\Video\\avi\\2.mp4";
         //创建工具类对象
         Mp4VideoUtil videoUtil = new Mp4VideoUtil(ffmpeg_path,video_path,mp4_name,mp4_path);
         //开始视频转换，成功将返回success

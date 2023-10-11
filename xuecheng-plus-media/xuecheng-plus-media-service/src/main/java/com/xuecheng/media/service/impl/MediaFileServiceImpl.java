@@ -52,9 +52,9 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class MediaFileServiceImpl implements MediaFileService {
-    private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(2,
-            2, 60, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(2),
+    private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(1,
+            4, 60, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(4),
             new ThreadPoolExecutor.CallerRunsPolicy());
 
 
