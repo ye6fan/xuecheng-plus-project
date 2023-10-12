@@ -4,7 +4,7 @@
 xuecheng-plus-project是叶凡课堂的微服务项目
 
 #### 软件架构
-mysql+springboot+springcloud++springcloudalibaba+elasticsearch+redis+rabbitmq+xxl-job+nginx+minio+ffmpeg
+mysql+springboot+springcloud++springcloudalibaba+springSecurity+elasticsearch+redis+rabbitmq+xxl-job+nginx+minio+ffmpeg
 
 
 #### 安装教程
