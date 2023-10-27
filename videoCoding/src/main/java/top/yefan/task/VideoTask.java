@@ -101,7 +101,7 @@ public class VideoTask {
                 String clearObjectName = objectName;
                 objectName = objectName.substring(0, objectName.lastIndexOf(".")) + ".mp4";
                 //直接使用avi的md5值
-                String url = "/" + bucket + objectName;
+                String url = "/" + bucket + "/" +objectName;
                 boolean upload = mediaFileService.addMediaFilesToMinIO(mp4_path, "vedio/mp4", bucket, objectName);
                 if (!upload) {
                     log.error("Upload video to minio failed, taskId:{}, fileId:{}", taskId, fileId);
