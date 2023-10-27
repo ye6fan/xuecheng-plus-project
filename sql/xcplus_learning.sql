@@ -43,9 +43,6 @@ CREATE TABLE `xc_choose_course`  (
 -- ----------------------------
 -- Records of xc_choose_course
 -- ----------------------------
-INSERT INTO `xc_choose_course` VALUES (21, 141, 'Mybatis+Plus', '48', 1232141425, '700001', '2023-10-01 17:09:01', 0.00, 365, '701001', '2023-10-01 17:09:01', '2024-09-30 17:09:01', NULL);
-INSERT INTO `xc_choose_course` VALUES (22, 142, '收费课程Html', '48', 1232141425, '700002', '2023-10-02 16:40:40', 1.00, 365, '701002', '2023-10-02 16:40:40', '2024-10-01 16:40:40', NULL);
-
 -- ----------------------------
 -- Table structure for xc_course_tables
 -- ----------------------------
@@ -70,6 +67,4 @@ CREATE TABLE `xc_course_tables`  (
 -- ----------------------------
 -- Records of xc_course_tables
 -- ----------------------------
-INSERT INTO `xc_course_tables` VALUES (12, 21, '48', 141, 1232141425, 'Mybatis+Plus', '700001', '2023-10-01 17:09:01', '2023-10-01 17:09:01', '2024-09-30 17:09:01', '2023-10-01 17:09:15', NULL);
-
 SET FOREIGN_KEY_CHECKS = 1;

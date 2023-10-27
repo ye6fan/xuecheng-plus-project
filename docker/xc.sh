@@ -9,7 +9,6 @@ docker stop media
 docker stop orders
 docker stop search
 
-docker start nginx
 docker start gateway
 docker start auth
 docker start checkcode
@@ -19,3 +18,4 @@ docker start system
 docker start media
 docker start orders
 docker start search
+docker start nginx

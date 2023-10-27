@@ -77,7 +77,7 @@ CREATE TABLE `xxl_job_info`  (
 -- ----------------------------
 INSERT INTO `xxl_job_info` VALUES (1, 1, '测试任务1', '2018-11-03 22:21:31', '2018-11-03 22:21:31', 'XXL', '', 'CRON', '0 0 0 * * ? *', 'DO_NOTHING', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2018-11-03 22:21:31', '', 0, 0, 0);
 INSERT INTO `xxl_job_info` VALUES (4, 4, 'xxljob', '2023-09-24 18:32:46', '2023-09-25 12:44:43', 'xxljob', 'xxljob', 'CRON', '0/3 * * * * ?', 'DO_NOTHING', 'SHARDING_BROADCAST', 'videoJobHandler', '', 'DISCARD_LATER', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2023-09-24 18:32:46', '', 0, 0, 0);
-INSERT INTO `xxl_job_info` VALUES (5, 6, 'xxljob', '2023-09-27 11:38:52', '2023-10-03 12:12:57', 'xxljob', 'xxljob', 'CRON', '0/3 * * * * ?', 'DO_NOTHING', 'SHARDING_BROADCAST', 'CoursePublishJobHandler', '', 'DISCARD_LATER', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2023-09-27 11:38:52', '', 1, 1696408503000, 1696408506000);
+INSERT INTO `xxl_job_info` VALUES (5, 6, 'xxljob', '2023-09-27 11:38:52', '2023-10-03 12:12:57', 'xxljob', 'xxljob', 'CRON', '0/3 * * * * ?', 'DO_NOTHING', 'SHARDING_BROADCAST', 'CoursePublishJobHandler', '', 'DISCARD_LATER', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2023-09-27 11:38:52', '', 0, 1696408503000, 1696408506000);
 
 -- ----------------------------
 -- Table structure for xxl_job_lock
@@ -136,20 +136,6 @@ CREATE TABLE `xxl_job_log_report`  (
 -- ----------------------------
 -- Records of xxl_job_log_report
 -- ----------------------------
-INSERT INTO `xxl_job_log_report` VALUES (1, '2023-09-24 00:00:00', 0, 1131, 534, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (2, '2023-09-23 00:00:00', 0, 0, 0, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (3, '2023-09-22 00:00:00', 0, 0, 0, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (4, '2023-09-25 00:00:00', 0, 278, 211, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (5, '2023-09-27 00:00:00', 0, 26, 6, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (6, '2023-09-26 00:00:00', 0, 0, 0, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (7, '2023-09-28 00:00:00', 0, 837, 8, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (8, '2023-10-01 00:00:00', 0, 99, 0, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (9, '2023-09-30 00:00:00', 0, 0, 0, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (10, '2023-09-29 00:00:00', 0, 0, 0, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (11, '2023-10-03 00:00:00', 0, 2032, 72, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (12, '2023-10-02 00:00:00', 0, 0, 0, NULL);
-INSERT INTO `xxl_job_log_report` VALUES (13, '2023-10-04 00:00:00', 0, 611, 8, NULL);
-
 -- ----------------------------
 -- Table structure for xxl_job_logglue
 -- ----------------------------

@@ -38,7 +38,7 @@ mkdir /data/xxl-job/logs -p
 docker pull xuxueli/xxl-job-admin:2.3.1
 docker run --name xxl-job -p 8080:8080 \
         -e PARAMS="\
-        --spring.datasource.url=jdbc:mysql://46.46.46.55:3306/xxl_job?Unicode=true&characterEncoding=UTF-8 \
+        --spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?Unicode=true&characterEncoding=UTF-8 \
         --spring.datasource.username=root \
         --spring.datasource.password=1234" \
         --network xc \
@@ -74,7 +74,7 @@ docker run -p 9200:9200 -p 9300:9300 \
            -v /data/elasticsearch/data:/usr/share/elasticsearch/data \
            -v /data/elasticsearch/plugins:/usr/share/elasticsearch/plugins \
            -e "discovery.type=single-node" \
-           -e ES_JAVA_OPTS="-Xms512m -Xmx512m" \
+           -e ES_JAVA_OPTS="-Xms512m -Xmx1024m" \
            -d elasticsearch:7.12.1
 
 docker pull kibana:7.12.1
@@ -87,7 +87,7 @@ docker run -p 5601:5601 \
         -d kibana:7.12.1
 
 ik
-./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.12.1/elasticsearch-analysis-ik-7.12.1.zip -y
+./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.12.1/elasticsearch-analysis-ik-7.12.1.zip
 
 cd conf/
 vi kibana.yml
@@ -118,19 +118,13 @@ docker run --name mysql -p 3306:3306 \
            -d --restart always \
            mysql:8.0.30
 
-docker run --name video \
-           --network xc \
-           -v /etc/localtime:/etc/localtime \
-           -e NACOS_ADDR=46.46.46.55:8848 \
-           -d --restart always \
-           registry.cn-beijing.aliyuncs.com/yefan-xc/java-ffmpeg-xc:1.0
-
 docker login --username=yelifan registry.cn-beijing.aliyuncs.com
 docker tag ye-ffmpeg reistry.cn-beijing.aliyuncs.com/yefan-xc/java-ffmpeg-xc
 docker push registry.cn-beijing.aliyuncs.com/yefan-xc/java-ffmpeg-xc
 docker pull registry.cn-beijing.aliyuncs.com/yefan-xc/java-ffmpeg-xc
 
-docker run -v /etc/localtime:/etc/localtime --name freemarker -e NACOS_ADDR=46.46.46.55:8848 --restart always --network xc -d freemarker
+docker run -v /etc/localtime:/etc/localtime --name freemarker -e NACOS_ADDR=nacos:8848 --restart always --network xc -d freemarker
+docker run --name video --network xc -v /etc/localtime:/etc/localtime -e NACOS_ADDR=nacos:8848 --restart always -d ffmpeg
 docker run -v /etc/localtime:/etc/localtime --name auth --restart always --network xc -d auth
 docker run -v /etc/localtime:/etc/localtime --name checkcode --restart always --network xc -d checkcode
 docker run -v /etc/localtime:/etc/localtime --name search --restart always --network xc -d search
@@ -140,3 +134,4 @@ docker run -v /etc/localtime:/etc/localtime --name content --restart always --ne
 docker run -v /etc/localtime:/etc/localtime --name gateway --restart always --network xc -d gateway
 docker run -v /etc/localtime:/etc/localtime --name learning --restart always --network xc -d learning
 docker run -v /etc/localtime:/etc/localtime --name orders --restart always --network xc -d orders
+docker run -v /etc/localtime:/etc/localtime --name nginx -p 80:80 --restart always --network xc -d nginx

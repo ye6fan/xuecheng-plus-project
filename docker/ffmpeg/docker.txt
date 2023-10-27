@@ -1,0 +1,8 @@
+docker pull centos:centos7
+docker run --name ct7 -d -t centos:centos7
+yum install epel-release -y
+yum localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm -y
+yum install ffmpeg ffmpeg-devel -y
+ffmpeg -version
+yum install -y java-1.8.0-openjdk
+docker commit ct7 jdk8-ffmpeg
