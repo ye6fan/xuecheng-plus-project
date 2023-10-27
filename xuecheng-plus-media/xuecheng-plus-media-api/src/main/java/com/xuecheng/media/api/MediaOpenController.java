@@ -20,7 +20,7 @@ public class MediaOpenController {
 
     @GetMapping("/preview/{mediaId}")
     public RestResponse<String> getPlayUrlByMediaId(@PathVariable String mediaId) {
-        if("fcf1a86835270adaab6e0c968470ba22".equals(mediaId)) {
+        if ("0e908e1ec7829290144b3e47837dbb0d".equals(mediaId) || "b510913a0504859d1c477d1ccc50838a".equals(mediaId) || "f8fed7171f25900a242919e7dd0b734c".equals(mediaId)) {
             XcCourseTablesDto courseTablesDto = learningServiceClient.getLearnStatus(142L);
             if (courseTablesDto == null) {
                 return RestResponse.validfail("此课程收费，请先购买此课程");
