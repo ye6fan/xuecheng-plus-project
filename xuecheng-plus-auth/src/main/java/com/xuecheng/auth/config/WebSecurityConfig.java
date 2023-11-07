@@ -17,23 +17,24 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
  * @version 1.0
  * &#064;description  安全管理配置
  */
-@EnableWebSecurity
+//Spring Security负责处理认证（authentication）和授权（authorization）
+@EnableWebSecurity//该注解用于开启Web安全性配置支持
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+//该注解用于启用Spring Security的方法级安全性
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    //444444444444444
     @Autowired
     private DaoAuthenticationProviderCustom daoAuthenticationProviderCustom;
-    //555555555555555
+    //第一步：用于配置身份验证，指定使用DaoAuthenticationProviderCustom类进行身份验证
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProviderCustom);
     }
-    //1111111111111
+    //第二步：获取AuthenticationManager实例
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    //99999999999999999
+    //第三步：密码加密方式的实例,用户密码加密
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

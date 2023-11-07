@@ -16,22 +16,31 @@ import javax.annotation.Resource;
 
 /**
  * @author Mr.M
- * @version 1.0
+ * @version 1.0 Spring OAuth2则专注于实现OAuth2协议相关的功能，包括颁发和管理访问令牌（access token）
  * &#064;description  授权服务器配置
  */
+//OAuth2AuthenticationProcessingFilter,通过请求头Authorization提取token, SecurityContextHolder
+//this.authenticationManager.authenticate(authentication);校验
 @Configuration
-@EnableAuthorizationServer
+@EnableAuthorizationServer//配置OAuth2授权服务器
 public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
-    //都是继承oauth2的Adapter适配器,spring
-    //1010101010101010
+    //都是继承oauth2的Adapter适配器,spring，管理令牌的服务接口
     @Resource(name = "authorizationServerTokenServicesCustom")
     private AuthorizationServerTokenServices authorizationServerTokenServices;
-    //aaaaaaaaaaaaaaaa
-    //它会委托DaoAuthenticationProvider去关联userDetailsService
+    //将AuthenticationManager接口的实现对象注入，处理身份验证的接口
+    //会委托给DaoAuthenticationProvider关联的UserDetailsService去验证用户名和密码
+    //provider.authenticate(authentication); AuthenticationProvider，DaoAuthenticationProvider
+    //总结：SecurityContextPersistenceFilter取放取放, SecurityContextHolder
+    //它会被用户密码过滤器调用,UsernamePasswordAuthenticationFilter，操作UsernamePasswordAuthenticationToken
+    //AuthenticationManager(ProviderManager), 11 AuthenticationProvider(AbstractUserDetailsAuthenticationProvider)
+    //11 user = this.retrieveUser(username, (UsernamePasswordAuthenticationToken)authentication);retrieve检索
+    //22 DaoAuthenticationProvider的retrieveUser方法，因为父类是虚拟方法
+    //22 UserDetails loadedUser = this.getUserDetailsService().loadUserByUsername(username);
+    //ExceptionTranslationFilter, FilterSecurityInterceptor,
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    //客户端详情服务
+    //第一部：客户端详情服务
     @Override
     public void configure(ClientDetailsServiceConfigurer clients)
             throws Exception {
@@ -39,7 +48,7 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
                 //前端拿着id和secret来后端申请令牌
                 .withClient("XcWebApp")// client_id客户端ID
                 .secret(new BCryptPasswordEncoder().encode("XcWebApp"))//客户端密钥
-                .resourceIds("xuecheng-plus")//资源列表，资源服务的镜像？
+                .resourceIds("xuecheng-plus")//资源列表
                 //该client允许的授权类型authorization_code,password,refresh_token,implicit,client_credentials
                 .authorizedGrantTypes("authorization_code", "password", "client_credentials",
                         "implicit", "refresh_token")
@@ -49,8 +58,7 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
                 .redirectUris("https://www.yefan.xyz/course/search.html");
     }
 
-    //bbbbbbbbbbbbbbb
-    //令牌端点的访问配置
+    //第二步：令牌端点的访问配置
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
@@ -60,9 +68,10 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }
 
-    //令牌访问端点的安全配置
+    //第三步：令牌访问端点的安全配置
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
+        //即任何人都可以访问获取公钥和检查令牌的端点
         security
                 .tokenKeyAccess("permitAll()")  //oauth/token_key是公开|提供公钥端点
                 .checkTokenAccess("permitAll()")    //oauth/check_token公开|检查令牌

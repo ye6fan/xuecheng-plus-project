@@ -27,12 +27,12 @@ public class TokenConfig {
     private TokenStore tokenStore;
     @Autowired
     private JwtAccessTokenConverter accessTokenConverter;
-    //66666666666666
+    //第二步：JWT的存储配置转换
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
-    //7777777777777777
+    //第一步：JWT令牌转换配置密钥
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -44,11 +44,11 @@ public class TokenConfig {
     //令牌管理服务，这里是认证并把token（jwt）给前端，别的服务导入spring-cloud-starter -security/-oauth2
     //进行令牌的配置jwt然后就可以获取与解析token中的数据了
     //spring-boot-starter-validation是参数校验框架例如不为空，字数要大于多少之类的
-    //88888888888888888
+    //第三步：配置令牌服务
     @Bean(name = "authorizationServerTokenServicesCustom")
     public AuthorizationServerTokenServices tokenService() {
         DefaultTokenServices service = new DefaultTokenServices();
-        service.setClientDetailsService(clientDetailsService);//配置客户端详情
+        service.setClientDetailsService(clientDetailsService);//配置客户端详情，应该是内存
         service.setSupportRefreshToken(true);//支持刷新令牌
         service.setTokenStore(tokenStore);//令牌存储策略
         //令牌增强器
