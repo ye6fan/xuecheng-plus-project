@@ -19,8 +19,11 @@ import javax.annotation.Resource;
  * @version 1.0 Spring OAuth2则专注于实现OAuth2协议相关的功能，包括颁发和管理访问令牌（access token）
  * &#064;description  授权服务器配置
  */
-//OAuth2AuthenticationProcessingFilter,通过请求头Authorization提取token, SecurityContextHolder
+//OAuth2AuthenticationProcessingFilter,通过请求头Authorization提取token,
+// SecurityContextHolder清空或者设置token
 //this.authenticationManager.authenticate(authentication);校验
+//SecurityContextHolder.getContext().setAuthentication(authResult);
+//校验后过滤chain.doFilter(request, response);
 @Configuration
 @EnableAuthorizationServer//配置OAuth2授权服务器
 public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
