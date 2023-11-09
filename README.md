@@ -1,7 +1,7 @@
 # xuecheng-plus-project
 
 #### 介绍
-xuecheng-plus-project是叶凡课堂的微服务项目
+哔站的黑马程序员的学成在线
 
 #### 软件架构
 mysql+springboot+springcloud++springcloudalibaba+springSecurity+elasticsearch+redis+rabbitmq+xxl-job+nginx+minio+ffmpeg
