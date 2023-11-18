@@ -1,10 +1,10 @@
 # xuecheng-plus-project
 
 #### 介绍
-哔站的黑马程序员的学成在线
+项目是个人开发的微服务项目，分为用户端、机构端的在线学习系统。
 
 #### 软件架构
-mysql+springboot+springcloud++springcloudalibaba+springSecurity+elasticsearch+redis+rabbitmq+xxl-job+nginx+minio+ffmpeg
+mysql+springboot+springcloud++springcloudalibaba+springSecurity+OAuth2+elasticsearch+redis+rabbitmq+xxl-job+nginx+minio+ffmpeg
 
 
 #### 安装教程
